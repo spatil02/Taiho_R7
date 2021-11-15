@@ -2,35 +2,35 @@
 CCDM DS mapping
 Notes: Standard mapping to CCDM DS table
 */
-
 WITH included_subjects AS (
                 SELECT DISTINCT studyid, siteid, usubjid FROM subject ),
 
      ds_data AS (
                 ---Disposition Event: All Subjects										
 (SELECT distinct project ::TEXT AS studyid,
-                        concat(concat(dm."project",'_'),substring(dm."SiteNumber",8,10)) ::TEXT AS siteid,
+                        concat(concat(dm."project",'_'),substring(dm."SiteNumber",9,11)) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         1.0::NUMERIC AS dsseq, --deprecated
                         'All Subjects'::TEXT AS dscat,
                         null::TEXT AS dsscat,
                         'All Subjects'::TEXT AS dsterm,
                         null::DATE AS dsstdtc
-                        from tas120_204."DM" dm)
+                        from tas2940_101."DM" dm)
                         
   
  	union all
     --Disposition Event: Consented
 										 
- (SELECT distinct "project" ::TEXT AS studyid,
+ (SELECT  "project" ::TEXT AS studyid,
                         concat(concat("project",'_'),substring("SiteNumber",8,10)) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         2.0::NUMERIC AS dsseq, --deprecated
                         'Consent'::TEXT AS dscat,
                         null::TEXT AS dsscat,
                         'Consented'::TEXT AS dsterm,
-                        case when "ICRYN" ='Yes' then "ICRDAT" else "ICDAT" end::DATE AS dsstdtc  
-                        from tas120_204."IC" i)					---column does not exists
+                         case when "ICRYN" = 'Yes' THEN "ICRDAT" end::DATE AS dsstdtc       
+                       from tas2940_101."IC" i
+                        )					
                         
  union all 
 
@@ -44,12 +44,9 @@ WITH included_subjects AS (
                         concat("IECAT","IETESTCD")::TEXT AS dsscat,
                         'Failed Screen'::TEXT AS dsterm,
                         COALESCE("MinCreated","RecordDate")::DATE AS dsstdtc
-                        from tas120_204."IE" ie
-                        where ie."IEYN"='No'
-                        and ("project","SiteNumber", "Subject", "serial_id") in
-                        (select "project","SiteNumber", "Subject", max(serial_id)  as serial_id
-                        from tas120_204."IE" ie
-                        group by 1,2,3))
+                        from tas2940_101."IE" ie
+                        where "IEYN"='No'
+                        )
                         
  union all 
 
@@ -63,7 +60,7 @@ WITH included_subjects AS (
                         null::TEXT AS dsscat,
                         'Enrolled'::TEXT AS dsterm,
                         "ENRDAT" ::DATE AS dsstdtc
-                        from tas120_204."ENR" enr 
+                        from tas2940_101."ENR" enr 
                         where "ENRYN" ='Yes'
                         )
                         
@@ -79,7 +76,7 @@ WITH included_subjects AS (
                         "EOTREAS" ::TEXT AS dsscat,
                         'Early EOT'::TEXT AS dsterm,
                         "EOTDAT" ::DATE AS dsstdtc
-                        from tas120_204."EOT" eot
+                        from TAS2940_101."EOT" eot
                         where "EOTREAS" not in ('Treatment Completion' , 'Death') )
                         
  union all 
@@ -94,7 +91,7 @@ WITH included_subjects AS (
                         null::TEXT AS dsscat,
                         'Withdrawn'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
-                        from tas120_204."EOS" eos
+                        from tas2940_101."EOS" eos
                         where "EOSREAS" not in ('Study Completion' ,'Death'))
                         
  union all 
@@ -109,7 +106,7 @@ WITH included_subjects AS (
                         null::TEXT AS dsscat,
                         'Completed'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
-                        from tas120_204."EOS" eos
+                        from tas2940_101."EOS" eos
                         where "EOSREAS"='Study Completion')
                         
  union all 
@@ -124,7 +121,7 @@ WITH included_subjects AS (
                         null::TEXT AS dsscat,
                         'Screened'::TEXT AS dsterm,
                         COALESCE(ie."MinCreated",ie."RecordDate") ::DATE AS dsstdtc
-                        from tas120_204."IE" ie
+                        from tas2940_101."IE" ie
                         where "IEYN"='Yes')
                         
  union all 
@@ -139,7 +136,7 @@ WITH included_subjects AS (
                         null::TEXT AS dsscat,
                         'Failed Randomization'::TEXT AS dsterm,
                         "ENRDAT" ::DATE AS dsstdtc
-                        from tas120_204."ENR" enr
+                       from tas2940_101."ENR" enr
                         where "ENRYN"='No')
                         
  union all 
@@ -154,7 +151,7 @@ WITH included_subjects AS (
                         "EOSREAS"::TEXT AS dsscat,
                         'Discontinued before Treatment'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
-                        from tas120_204."EOS" eos
+                        from tas2940_101."EOS" eos
                         where "EOSREAS"='Death'))
 
 SELECT
@@ -177,7 +174,7 @@ SELECT
         null::TEXT AS epoch,
         null::TIMESTAMP WITHOUT TIME ZONE AS dsdtc,
         null::INTEGER AS dsstdy
-         /*KEY, (ds.studyid || '~' || ds.siteid || '~' || ds.usubjid || '~' || ds.dsseq)::TEXT  AS objectuniquekey KEY*/
+        /*KEY, (ds.studyid || '~' || ds.siteid || '~' || ds.usubjid || '~' || ds.dsseq)::TEXT  AS objectuniquekey KEY*/
         /*KEY , now()::TIMESTAMP WITH TIME ZONE AS comprehend_update_time KEY*/
 FROM ds_data ds
 JOIN included_subjects s ON (ds.studyid = s.studyid AND ds.siteid = s.siteid AND ds.usubjid = s.usubjid);

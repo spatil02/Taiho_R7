@@ -210,7 +210,7 @@ union all
                         "Subject" ::TEXT AS usubjid,
                         4.2::NUMERIC AS dsseq, --deprecated
                         'Randomization'::TEXT AS dscat,
-                        null::TEXT AS dsscat,
+                        "EOSREAS"::TEXT AS dsscat,
                         'Discontinued before Treatment'::TEXT AS dsterm,
                         "EOSDAT"::DATE AS dsstdtc,  
                         null::TEXT AS dsgrpid,

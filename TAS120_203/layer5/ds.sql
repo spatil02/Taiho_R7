@@ -151,7 +151,7 @@ WITH included_subjects AS (
                         "Subject" ::TEXT AS usubjid,
                         4.2::NUMERIC AS dsseq, --deprecated
                         'Randomization'::TEXT AS dscat,
-                        null::TEXT AS dsscat,
+                        "EOSREAS"::TEXT AS dsscat,
                         'Discontinued before Treatment'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
                         from tas120_203."EOS" eos

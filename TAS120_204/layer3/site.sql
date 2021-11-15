@@ -12,7 +12,7 @@ WITH included_studies AS (
                         concat(concat('TAS120_204','_'),substring("name",1,3))::text AS siteid,
                         substring(trim("name"),5)::text AS sitename,
                         'Syneos'::text AS croid,
-                        'PXL'::text AS sitecro,
+                        'Syneos'::text AS sitecro,
                         'United States of America'::text AS sitecountry,
                         null::text AS sitecountrycode,
                         'North America'::text AS siteregion,
