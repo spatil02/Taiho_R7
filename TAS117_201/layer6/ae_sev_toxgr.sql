@@ -17,7 +17,7 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
                         case when "AEGRAD"='1 - Mild' then 'G1'
                         			  when "AEGRAD"='2 - Moderate' then 'G2'
                         			  when "AEGRAD"='3 - Severe' then 'G3'
-                        			  when "AEGRAD"='4 - Life Threatening' then 'G4'
+                        			  when "AEGRAD"='4 - Life-threatening' then 'G4'
                         			  when "AEGRAD"='5 - Death' then 'G5'
                         			  when ("AEGRAD"='' or "AEGRAD" is null) then 'Missing'
                         end::text AS faorres,
