@@ -8,8 +8,8 @@ WITH included_studies AS (
 
     fielddef_data AS (
                 select distinct  "StudyOID" ::text AS studyid,
-                        "FormOID" ::text AS formid,
-                        "ItemOID" ::text AS fieldId,
+                        nullif("FormOID",'') ::text AS formid,
+                        split_part(nullif("ItemOID",''),'.',2)::text AS fieldId,
                         COALESCE("SASLabel",'Missing')::text AS fieldname,
                         'False'::boolean AS isprimaryendpoint,
                         'False'::boolean AS issecondaryendpoint,

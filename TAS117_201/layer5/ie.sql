@@ -19,14 +19,9 @@ WITH included_subjects AS (
                         "IECAT" ::text AS iecat,
                         null::text AS iescat
                         from tas117_201."IE" i
-                        where ("project","SiteNumber","Subject","serial_id") in 
-                        (select "project" ,
-                        "SiteNumber",
-                        "Subject",
-                        max("serial_id") as "serial_id" 
-                        from tas117_201."IE" i where "IEYN" ='No' 
-                        group by "project", "SiteNumber", "Subject")
-                         )
+                        where "IEYN" ='No'
+                        
+                                )
 
 SELECT 
         /*KEY (ie.studyid || '~' || ie.siteid || '~' || ie.usubjid)::text AS comprehendid, KEY*/

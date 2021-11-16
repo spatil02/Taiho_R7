@@ -22,7 +22,7 @@ WITH included_subjects AS (
                         coalesce("DMRACE" ,"DMOTH") ::text AS race,
                         "DMETHNIC" ::text AS ethnicity,
                         null::text AS armcd,
-                        enr."ENRCOHO"::text AS arm,
+                        nullif(enr."ENRCOHO",'')::text AS arm,
                         null::text AS brthdtc_iso
                         from tas120_203."DM" dm
                        	     left join tas120_203."ENR" enr

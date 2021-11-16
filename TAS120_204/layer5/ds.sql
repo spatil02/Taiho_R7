@@ -36,20 +36,18 @@ WITH included_subjects AS (
 
 --Disposition Event: Failed Screen										 
  
-  (SELECT distinct "project" ::TEXT AS studyid,
+  (SELECT distinct ie."project" ::TEXT AS studyid,
                         concat(concat(ie."project",'_'),substring(ie."SiteNumber",8,10)) ::TEXT AS siteid,
                         ie."Subject" ::TEXT AS usubjid,
                         2.1::NUMERIC AS dsseq, --deprecated
                         'Enrollment'::TEXT AS dscat,
-                        concat("IECAT","IETESTCD")::TEXT AS dsscat,
+                        string_agg(case when (nullif("IECAT",'') is null and nullif("IETESTCD",'') is null) then null 
+			else concat("IECAT",' ',"IETESTCD") end, ', ')::TEXT AS dsscat,
                         'Failed Screen'::TEXT AS dsterm,
                         COALESCE("MinCreated","RecordDate")::DATE AS dsstdtc
                         from tas120_204."IE" ie
                         where ie."IEYN"='No'
-                        and ("project","SiteNumber", "Subject", "serial_id") in
-                        (select "project","SiteNumber", "Subject", max(serial_id)  as serial_id
-                        from tas120_204."IE" ie
-                        group by 1,2,3))
+                       group by 1,2,3,8 )
                         
  union all 
 
@@ -62,7 +60,7 @@ WITH included_subjects AS (
                         'Enrollment'::TEXT AS dscat,
                         null::TEXT AS dsscat,
                         'Enrolled'::TEXT AS dsterm,
-                        "ENRDAT" ::DATE AS dsstdtc
+                        coalesce("ENRDAT","MinCreated","RecordDate")::DATE AS dsstdtc
                         from tas120_204."ENR" enr 
                         where "ENRYN" ='Yes'
                         )
