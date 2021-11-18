@@ -58,7 +58,7 @@ WITH included_subjects AS (
                         null::text AS aespid,
                         null::text AS aestdtc_iso,
                         null::text AS aeendtc_iso,
-                        "AETERM_PT"::text AS preferredterm,
+                        nullif("AETERM_PT",'')::text AS preferredterm,
                         "MinCreated"::timestamp without time zone AS aerptdt,
                         null::boolean AS aesi,
                         null::text AS aeepreli

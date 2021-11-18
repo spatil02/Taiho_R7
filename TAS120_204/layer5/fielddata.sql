@@ -12,7 +12,7 @@ WITH included_studies AS (
                                   
     fielddata_data AS (
         SELECT f.studyid AS studyid,
-            f.siteidjoin AS siteidjoin,
+            concat('TAS120_204_',split_part(f.siteidjoin,'_',2)) AS siteidjoin,
             f.usubjid AS usubjid,
             f.formid AS formid, 
             f.formseq AS formseq,

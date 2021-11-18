@@ -11,7 +11,7 @@ WITH included_studies AS (
                         nullif("FormOID",'') ::text AS formid,
                         split_part(nullif("ItemOID",''),'.',2)::text AS fieldId,
                         COALESCE("SASLabel",'Missing')::text AS fieldname,
-                        'False'::boolean AS isprimaryendpoint,
+                        case when UPPER(nullif("FormOID",'')) in ('OR', 'PA', 'PR') then True else False end::boolean AS isprimaryendpoint,
                         'False'::boolean AS issecondaryendpoint,
                         case when "SourceDocument"='True' then 'True' else 'False' end::boolean AS issdv,
                         case when "Mandatory"='True' then 'True' else 'False' end::boolean  AS isrequired

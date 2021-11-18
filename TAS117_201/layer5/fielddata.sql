@@ -12,7 +12,7 @@ WITH included_studies AS (
                                   
     fielddata_data AS (
         SELECT f.studyid AS studyid,
-            f.siteidjoin AS siteidjoin,
+            concat('TAS117_201_',split_part(f.siteidjoin,'_',2)) AS siteidjoin,
             f.usubjid AS usubjid,
             f.formid AS formid, 
             f.formseq AS formseq,
@@ -43,9 +43,7 @@ WITH included_studies AS (
                                     AND ((de.ItemGroupOID NOT LIKE '%_LOG_LINE' AND  sdv.datapageid= f.datapageid) 
                                     OR (sdv.recordid=f.recordid)))
         WHERE f.formseq=(CASE WHEN de.ItemGroupOID NOT LIKE '%_LOG_LINE' AND lower(f.visit) NOT LIKE '%unscheduled%' THEN 1 ELSE f.formseq END)
-		--and (f.datacollecteddate between '2020-01-08'
-        --and current_date) and f.studyid='TAS120_201'
-        GROUP BY f.studyid, f.siteidjoin, f.usubjid, f.formid, f.formseq, f.visit_cnt, f.InstanceRepeatNumber,
+		GROUP BY f.studyid, f.siteidjoin, f.usubjid, f.formid, f.formseq, f.visit_cnt, f.InstanceRepeatNumber,
             f.fieldid, f.fieldseq, f.visit, f.visitseq, f.log_num, f.datavalue
 )
 
