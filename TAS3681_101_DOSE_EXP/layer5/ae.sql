@@ -12,6 +12,7 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
 
     ae_data AS (
 SELECT 'TAS3681_101_DOSE_EXP'::text AS studyid,
+					'TAS3681_101_DOSE_EXP'::text as studyname,
                        ae."SiteNumber"::text AS siteid,
                        ae."Subject"::text AS usubjid,
                        nullif("AETERM_PT",'')::text AS aeterm,
@@ -61,7 +62,7 @@ SELECT 'TAS3681_101_DOSE_EXP'::text AS studyid,
 SELECT
         /*KEY (ae.studyid || '~' || ae.siteid || '~' || ae.usubjid)::text AS comprehendid, KEY*/
         ae.studyid::text AS studyid,
-		null::text AS studyname,
+		ae.studyname::text AS studyname,
         ae.siteid::text AS siteid,
 		si.sitename::text AS sitename,
 		si.sitecountry::text AS sitecountry,
