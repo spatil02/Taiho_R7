@@ -491,7 +491,7 @@ SELECT
   eg.egblfl::text  AS egblfl,
        eg.visit::text                                     AS visit,
        eg.egdtc::timestamp without time zone              AS egdtc,
-       eg.egtm::                   time without time zone AS egtm
+       eg.egtm:: time without time zone AS egtm
        /*KEY, (eg.studyid || '~' || eg.siteid || '~' || eg.usubjid || '~' || eg.egseq)::text AS objectuniquekey KEY*/
        /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM   eg_data eg

@@ -12,6 +12,7 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
      cm_data AS (
                  -- TAS3681-101
                 SELECT  'TAS3681_101_DOSE_ESC'::text AS studyid,
+					  'TAS3681_101_DOSE_ESC'::text AS studyname,
                         "SiteNumber"::text AS siteid,
                         "Subject"::text AS usubjid,
                         concat("RecordPosition","PageRepeatNumber")::integer AS cmseq,
@@ -45,7 +46,7 @@ from tas3681_101."CM"
 SELECT 
         /*KEY (cm.studyid || '~' || cm.siteid || '~' || cm.usubjid)::text AS comprehendid, KEY*/
         cm.studyid::text AS studyid,
-		null::text As studyname,
+		cm.studyname::text As studyname,
         cm.siteid::text AS siteid,
 		si.sitename::text AS sitename,
 		si.sitecountry::text AS sitecountry,

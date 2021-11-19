@@ -217,7 +217,12 @@ group   by       B.studyid, B.siteid, B.usubjid, B.visit,B.visitseq
 SELECT
         /*KEY (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid)::text AS comprehendid, KEY*/
         sv.studyid::text AS studyid,
+		null::text AS studyname,
         sv.siteid::text AS siteid,
+		null::text AS sitename,
+        null::text AS siteregion,
+        null::text AS sitecountry,
+       null::text AS sitecountrycode,
         sv.usubjid::text AS usubjid,
         sv.visitnum::numeric AS visitnum,
         sv.visit::text AS visit,

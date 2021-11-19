@@ -10,6 +10,7 @@ WITH included_studies AS (
 
     site_data AS (
                 SELECT distinct 'TAS3681_101_DOSE_ESC'::text AS studyid,
+								null::text AS studyname,
                         "site_number"::text AS siteid,
                        case when tss.sitename_std is null then s1."facility_name"
                        else tss.sitename_std end::text AS sitename,
@@ -78,7 +79,7 @@ WITH included_studies AS (
 SELECT 
         /*KEY (s.studyid || '~' || s.siteid)::text AS comprehendid, KEY*/
         s.studyid::text AS studyid,
-        null::text AS studyname,
+        s.studyname::text AS studyname,
         s.siteid::text AS siteid,
         s.sitename::text AS sitename,
         s.croid::text AS croid,
