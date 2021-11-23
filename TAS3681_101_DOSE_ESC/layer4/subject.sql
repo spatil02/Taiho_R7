@@ -18,6 +18,7 @@ WITH included_sites AS (
                         null::text AS status,
                         null::date AS exitdate,
 						null::text AS sitekey
+						,null::text AS protver
 			From 	tas3681_101."IE"
 		where "IERANDY" != 'Expansion'
 				/*LIMIT LIMIT 100 LIMIT*/)

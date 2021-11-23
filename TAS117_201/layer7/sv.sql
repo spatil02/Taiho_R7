@@ -78,6 +78,42 @@ SELECT  project ::text AS studyid,
                         "VISIT" ::date AS svendtc
                         from tas117_201."DOVSFU" d 
                 ),
+				fd_visit AS (
+                        SELECT DISTINCT fd.studyid,
+                                    fd.siteid,
+                                    fd.usubjid,
+                                    99::numeric AS visitnum,
+                                    fd.visit,
+                                    coalesce(datacollecteddate,dataentrydate)::date AS svstdtc,
+                                    coalesce(datacollecteddate,dataentrydate)::date AS svendtc
+                            FROM formdata fd
+                            LEFT JOIN sv_data sd ON (fd.studyid = sd.studyid and fd.siteid = sd.siteid and fd.usubjid = sd.usubjid and trim(fd.visit) = trim(sd.visit))
+                            WHERE sd.studyid IS NULL AND fd.studyid='TAS117_201'),
+                                 
+                        all_visits AS (
+                        SELECT studyid,
+                        	   --studyname,
+                                siteid,
+                                usubjid,
+                                visitnum,
+                                 trim(visit) visit, 
+                                 visitseq,
+                                svstdtc,
+                                svendtc 
+                        FROM sv_data
+                        UNION ALL
+                        SELECT studyid,--'TAS117_201' as studyname,
+                                siteid,
+                                usubjid,
+                                visitnum,
+                                
+                                trim(visit) visit,
+                                1 as visitseq,
+                                min(svstdtc) as svstdtc,
+                                max(svendtc) as svendtc
+                        FROM fd_visit
+                        group by 1,2,3,4,5,6
+                        ),
 
      included_sites AS (
                   SELECT DISTINCT studyid,studyname,siteid,sitecountry,sitecountrycode,sitename,siteregion FROM site)
@@ -85,7 +121,7 @@ SELECT  project ::text AS studyid,
 SELECT 
         /*KEY (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid)::text AS comprehendid, KEY*/
         sv.studyid::text AS studyid,
-        --si.studyname::text AS studyname,
+        si.studyname::text AS studyname,
         sv.siteid::text AS siteid,
         si.sitename::text AS sitename,
         si.siteregion::text AS siteregion,
@@ -97,9 +133,9 @@ SELECT
         sv.visitseq::int AS visitseq,
         sv.svstdtc::date AS svstdtc,
         sv.svendtc::date AS svendtc
-        /*KEY , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visitnum)::text  AS objectuniquekey KEY*/
+        /*KEY , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
-FROM sv_data sv
+FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
 LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
 

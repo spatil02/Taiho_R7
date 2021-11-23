@@ -86,7 +86,7 @@ SELECT
         sv.visitseq::int AS visitseq,
         sv.svstdtc::date AS svstdtc,
         sv.svendtc::date AS svendtc
-        /*KEY  , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visitnum)::text  AS objectuniquekey KEY*/ 
+        /*KEY  , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visit)::text  AS objectuniquekey KEY*/ 
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
