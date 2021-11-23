@@ -44,7 +44,7 @@ from "tas120_202"."CM"
 SELECT 
         /*KEY (cm.studyid || '~' || cm.siteid || '~' || cm.usubjid)::text AS comprehendid, KEY*/
         cm.studyid::text AS studyid,
-        null::text AS studyname,
+        'TAS120_202'::text AS studyname,
         cm.siteid::text AS siteid,
         si.sitename::text AS sitename,
         si.sitecountry::text AS sitecountry,

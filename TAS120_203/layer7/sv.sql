@@ -31,7 +31,8 @@ sv.svendtc from(
                         max("VISITDAT")::date AS svendtc from TAS120_203."VISIT"
                         group by 1,2,3,4,5,6)sv),
                         
-                        fd_visit AS (SELECT DISTINCT fd.studyid,
+                       fd_visit AS (
+                        SELECT DISTINCT fd.studyid,
                                     fd.siteid,
                                     fd.usubjid,
                                     99::numeric AS visitnum,
@@ -44,23 +45,27 @@ sv.svendtc from(
                                  
                         all_visits AS (
                         SELECT studyid,
+                        	   studyname,
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                 trim(visit), 
+                                 trim(visit) visit, 
+                                 visitseq,
                                 svstdtc,
-                                svendtc
+                                svendtc 
                         FROM sv_data
                         UNION ALL
-                        SELECT studyid,
+                        SELECT studyid,'TAS120_203' as studyname,
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                trim(visit),
+                                
+                                trim(visit) visit,
+                                1 as visitseq,
                                 min(svstdtc) as svstdtc,
                                 max(svendtc) as svendtc
                         FROM fd_visit
-                        group by 1,2,3,4,5
+                        group by 1,2,3,4,5,6
                         ),
 
      included_sites AS (
@@ -83,8 +88,7 @@ SELECT
         sv.svendtc::date AS svendtc
         /*KEY  , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visitnum)::text  AS objectuniquekey KEY*/ 
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
-FROM sv_data sv
+FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
 LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
-
 

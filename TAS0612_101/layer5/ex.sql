@@ -9,6 +9,7 @@ WITH included_subjects AS (
     ex_data AS (             
              SELECT
                 ex."project"::	text AS studyid,
+                'TAS0612_101':: text as studyname,
                 --ex."SiteNumber":: text AS siteid,
 				concat('TAS0612_101_',split_part(ex."SiteNumber",'_',2))::text AS siteid,
                 ex."Subject":: text AS usubjid,
@@ -33,13 +34,21 @@ WITH included_subjects AS (
                 --ex."EXOENTM"::time without time zone AS exendtm,
                  Null::time without time zone AS exendtm,
                 NULL::					INT       AS exendy,
-                NULL::					text      AS exdur
+                NULL::					text      AS exdur,
+                null::					text 	  as drugrsp,
+                null:: 					text AS drugrspcd
             FROM tas0612_101."EXO" ex   
-     )
+     ),
+     
+     site_data as (select distinct studyid,siteid,sitename,sitecountry,sitecountrycode,siteregion from site)
 
 SELECT
       /*KEY (ex.studyid || '~' || ex.siteid || '~' || ex.usubjid)::text AS comprehendid, KEY*/
       ex.studyid::text AS studyid,
+      ex.studyname::text AS studyname,
+      ex.siteid::text AS siteid,
+      sd.sitename::text AS sitename,
+      sd.sitecountry::text AS sitecountry,
       ex.siteid::text AS siteid,
       ex.usubjid::text AS usubjid,
       ex.exseq::int AS exseq,
@@ -59,12 +68,12 @@ SELECT
       ex.exendtc::date AS exendtc,
       ex.exendtm::time AS exendtm,
       ex.exendy::int AS exendy,
-      ex.exdur::text AS exdur
+      ex.exdur::text AS exdur,
+      ex.drugrsp::text AS drugrsp,
+      ex.drugrspcd::text AS drugrspcd
       /*KEY, (ex.studyid || '~' || ex.siteid || '~' || ex.usubjid || '~' || ex.exseq)::text  AS objectuniquekey KEY*/
       /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM ex_data ex
-JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid);
-
-
-
+JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
+join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
 

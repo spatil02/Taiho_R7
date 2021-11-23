@@ -46,7 +46,7 @@ WITH included_subjects AS (
                         'Failed Screen'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
                         from tas120_203."EOS" e
-                        left join tas120_203."IC" i
+                        join tas120_203."IC" i
                         on i.project=e.project and i."SiteNumber"=e."SiteNumber" and i."Subject"=e."Subject"
                         and e."EOSREAS" ='Screen Failure'and i."IEYN"='No'
                         )

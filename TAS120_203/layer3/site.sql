@@ -65,7 +65,7 @@ SELECT
         s.sitepostal::text AS sitepostal,
         s.sitestatus::text AS sitestatus,
         s.sitestatusdate::date AS sitestatusdate,
-		s.statusapplicable::text as statusapplicable
+		s.statusapplicable::BOOLEAN as statusapplicable
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM site_data s 
 JOIN included_studies st ON (s.studyid = st.studyid)

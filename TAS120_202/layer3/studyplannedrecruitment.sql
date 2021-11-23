@@ -106,7 +106,7 @@ SELECT
         spr.frequency::text AS frequency,
         spr.enddate::date AS enddate,
         spr.type::text AS type,
-        spr.recruitmentcount::int AS recruitmentcount
+        spr.recruitmentcount::NUMERIC AS recruitmentcount
         /*KEY ,(spr.studyid || '~' || spr.category || '~' || spr.frequency || '~' || spr.enddate || '~' || spr.type)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM studyplannedrecruitment_data spr

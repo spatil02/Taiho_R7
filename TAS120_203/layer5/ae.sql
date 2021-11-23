@@ -15,9 +15,9 @@ WITH included_subjects AS (
                         null::text AS sitecountrycode,
                         null::text AS siteregion,
                         "Subject" ::text AS usubjid,
-                        "AETERM_PT" ::text AS aeterm,
-                        "AETERM" ::text AS aeverbatim,
-                        "AETERM_SOC" ::text AS aebodsys,
+                        NULLIF("AETERM_PT",'') ::text AS aeterm,
+                        NULLIF("AETERM",'') ::text AS aeverbatim,
+                        coalesce (NULLIF("AETERM_SOC",''),'Not Available') ::text AS aebodsys,
                         "AESTDAT" ::timestamp without time zone AS aestdtc,
                         "AEENDAT" ::timestamp without time zone AS aeendtc,
                         case when "AEGR" ='1' then 'G1'

@@ -49,13 +49,21 @@ WITH included_subjects AS (
                                 max(svendtc) as svendtc
                         FROM formdata_visits
                         group by studyid, siteid, usubjid, visitnum,visit
-                        )
+                        ),
+
+     included_sites AS (
+                  SELECT DISTINCT studyid,studyname,siteid,sitecountry,sitecountrycode,sitename,siteregion from site)
 						
 
 SELECT 
         /*KEY (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid)::text AS comprehendid, KEY*/
         sv.studyid::text AS studyid,
+        si.studyname::text AS studyname,
         sv.siteid::text AS siteid,
+        si.sitename::text AS sitename,
+        si.siteregion::text AS siteregion,
+        si.sitecountry::text AS sitecountry,
+        si.sitecountrycode::text AS sitecountrycode,
         sv.usubjid::text AS usubjid, 
         sv.visitnum::numeric AS visitnum,
         sv.visit::text AS visit,
@@ -65,5 +73,6 @@ SELECT
         /*KEY , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
-JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid);
+JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
+LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
 

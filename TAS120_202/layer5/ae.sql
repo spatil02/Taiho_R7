@@ -54,12 +54,19 @@ nullif("AETERM_SOC_CD",'')::int AS aesoccd,
  "AEGRDAT"
 FROM "tas120_202"."AE" ae)a)b
 where rank = 1
-)
+),
+                        
+     site_data as (select distinct studyid,siteid,sitename,sitecountry,sitecountrycode,siteregion from site)
 
 SELECT
         /*KEY (ae.studyid || '~' || ae.siteid || '~' || ae.usubjid)::text AS comprehendid, KEY*/
         ae.studyid::text AS studyid,
+        'TAS120_202'::text AS studyname,
         ae.siteid::text AS siteid,
+        sd.sitename::text AS sitename,
+        sd.sitecountry::text AS sitecountry,
+        sd.sitecountrycode::text AS sitecountrycode,
+        sd.siteregion::text AS siteregion,
         ae.usubjid::text AS usubjid,
         ae.aeterm::text AS aeterm,
         ae.aeverbatim::text AS aeverbatim,
@@ -91,5 +98,6 @@ ae.aesi::boolean as aesi
        /*KEY, (ae.studyid || '~' || ae.siteid || '~' || ae.usubjid || '~' || ae.aeseq)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM ae_data ae
-JOIN included_subjects s ON (ae.studyid = s.studyid AND ae.siteid = s.siteid AND ae.usubjid = s.usubjid);
+JOIN included_subjects s ON (ae.studyid = s.studyid AND ae.siteid = s.siteid AND ae.usubjid = s.usubjid)
+left join site_data sd on (ae.studyid = sd.studyid AND ae.siteid = sd.siteid);
 

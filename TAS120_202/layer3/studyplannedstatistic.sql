@@ -22,7 +22,7 @@ SELECT
         sps.studyid::text AS studyid,
         sps.statcat::text AS statcat,
         sps.statsubcat::text AS statsubcat,
-        sps.statval::int AS statval,
+        sps.statval::NUMERIC AS statval,
         sps.statunit::text AS statunit
         /*KEY , (sps.studyid || '~' || sps.statCat)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/

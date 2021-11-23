@@ -22,7 +22,7 @@ dm_dm2 as(select 	distinct dm."project"::text as studyid,
 SELECT 
         /*KEY (dm.studyid || '~' || dm.siteid || '~' || dm.usubjid)::text AS comprehendid, KEY*/
         dm.studyid::text AS studyid,
-        null::text AS studyname,
+        'TAS120_202'::text AS studyname,
         dm.siteid::text AS siteid,
         si.sitename::text AS sitename,
         si.sitecountry::text AS sitecountry,
