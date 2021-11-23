@@ -61,7 +61,8 @@ SELECT
         tv.visitdy::int AS visitdy,
         tv.visitwindowbefore::int AS visitwindowbefore,
         tv.visitwindowafter::int AS visitwindowafter,
-        null::boolean AS isbaselinevisit
+        null::boolean AS isbaselinevisit,
+		'True'::boolean as isvisible
         /*KEY , (tv.studyid || '~' || tv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM tv_data tv
