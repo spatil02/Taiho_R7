@@ -3,6 +3,7 @@ CCDM DS mapping
 Notes: Standard mapping to CCDM DS table
 */
 
+
 WITH included_subjects AS (
                 SELECT DISTINCT studyid, siteid, usubjid FROM subject ),
                 
@@ -65,7 +66,7 @@ union all
 
 --Disposition Event: Failed Screen
 
-select studyid, siteid, usubjid, dsseq, dscat, dsterm, dsstdtc, dsscat from(
+select  studyid, siteid, usubjid, dsseq, dscat, dsterm,max(dsstdtc) as dsstdtc, string_agg (dsscat,', ') as dsscat from(
 select studyid, siteid, usubjid, dsseq, dscat, dsterm, dsstdtc, dsscat,RecordPosition,
 rank()over(partition by studyid, siteid, usubjid, dsseq, dscat, dsterm, dsstdtc order by recordposition desc) as rank
 from (
@@ -77,16 +78,15 @@ ie."Subject"::text AS usubjid,
 'Enrollment'::text AS dscat,
 'Failed Screen'::text AS dsterm,
 COALESCE(ie."MinCreated" ,ie."RecordDate")::DATE AS dsstdtc,
-case 
-	when nullif("IECAT",'') is null and nullif("IETESTCD",'') is null
-					then null 
-	else concat(concat("IECAT",' '),"IETESTCD") 					
-end::text AS dsscat,
+case when (nullif("IECAT",'') is null and nullif("IETESTCD",'') is null) then null 
+			else concat("IECAT",' ',"IETESTCD") end ::text AS dsscat,
+
 ie."RecordPosition" :: numeric as RecordPosition
 from tas0612_101."IE" as ie
-where ie."IEYN" = 'No'
-)a)b
-where rank = 1
+where ie."IEYN" = 'No'  
+)a)b 
+where rank = 1  
+group by studyid, siteid, usubjid, dsseq, dscat, dsterm
   
 union all 
 
@@ -158,16 +158,23 @@ union all
 
 --Disposition Event: Failed Randomization
 
-SELECT  "project"::TEXT AS studyid,
+SELECT   "project"::TEXT AS studyid,
 concat('TAS0612_101_',split_part(ie."SiteNumber",'_',2))::TEXT AS siteid,
 ie."Subject"::TEXT AS usubjid,
 3.1::NUMERIC AS dsseq, 
 'Enrollment'::TEXT AS dscat,
 'Failed Randomization'::TEXT AS dsterm,
-COALESCE(ie."MinCreated" ,ie."RecordDate")::DATE AS dsstdtc,
+COALESCE(ie."MinCreated",ie."RecordDate")::DATE AS dsstdtc,
 null::TEXT AS dsscat
 from tas0612_101."IE" ie
-WHERE "IEYN" = 'No'
+WHERE "IEYN" = 'No' and	("project","SiteNumber", "Subject", "serial_id")
+	in (
+	
+	select "project","SiteNumber", "Subject", max(serial_id)  as serial_id
+	from tas0612_101."IE"
+	group by 1,2,3
+	)
+
 
 union all 
 
@@ -206,9 +213,10 @@ SELECT
         null::TEXT AS epoch,
         null::TIMESTAMP WITHOUT TIME ZONE AS dsdtc,
         null::INTEGER AS dsstdy
-        /*KEY , (ds.studyid || '~' || ds.siteid || '~' || ds.usubjid || '~' || ds.dsseq)::TEXT  AS objectuniquekey KEY*/
+         /*KEY, (ds.studyid || '~' || ds.siteid || '~' || ds.usubjid || '~' || ds.dsseq)::TEXT  AS objectuniquekey KEY*/
         /*KEY , now()::TIMESTAMP WITH TIME ZONE AS comprehend_update_time KEY*/
 FROM ds_data ds
 JOIN included_subjects s ON (ds.studyid = s.studyid AND ds.siteid = s.siteid AND ds.usubjid = s.usubjid);
+
 
 

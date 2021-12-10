@@ -49,7 +49,6 @@ SELECT
       ex.siteid::text AS siteid,
       sd.sitename::text AS sitename,
       sd.sitecountry::text AS sitecountry,
-      ex.siteid::text AS siteid,
       ex.usubjid::text AS usubjid,
       ex.exseq::int AS exseq,
       ex.visit::text AS visit,

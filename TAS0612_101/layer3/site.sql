@@ -21,14 +21,14 @@ WITH included_studies AS (
                         null::text AS siteinvestigatorname,
                         null::text AS sitecraname,
                         case
-                            when trim("country") = 'USA' then 'United States of America'
+                            when trim("country") = 'USA' then 'United States'
                             when trim("country") = 'FRA' then 'France'
                             when trim("country") = 'BEL' then 'Belgium'
                             when trim("country") = 'ITA' then 'Italy'
                             when trim("country") = 'GBR' then 'United Kingdom'
                             when trim("country") = 'NLD' then 'Netherland'
                             when trim("country") = 'ESP' then 'Spain'
-                        else 'United States of America'
+                        else 'United States'
                         end::text AS sitecountry,
                         case
                             when trim("country") = 'USA' then 'North America'
@@ -119,7 +119,9 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

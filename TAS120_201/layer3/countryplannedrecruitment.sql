@@ -53,7 +53,7 @@ SELECT DISTINCT
 										 When trim(ms.country) = 'FRA' then 'France'
 										 When trim(ms.country) = 'ITA' then 'Italy'
 										 When trim(ms.country) = 'CAN' then 'Canada'
-										 else null
+										 else 'United States of America'
 										 end::text AS sitecountry,
 										 ms.country::text AS sitecountrycode,
 										 'Enrollment'::text AS category,

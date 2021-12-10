@@ -75,7 +75,10 @@ dm_dm2 as( select distinct 	a.studyid,
 					  left join tas3681_101."IE" ie 
 					  on	   (dm2."project" = ie.project and 
 								dm2."SiteNumber" = ie."SiteNumber" and 
-								dm2."Subject" = ie."Subject")		
+								dm2."Subject" = ie."Subject")
+						where (ie."Subject",ie."SiteNumber",ie.serial_id) in (select "Subject","SiteNumber",max(serial_id) 
+						from tas3681_101."IE" ie 
+						group by 1,2)		
 					  )a
 	)
 select
@@ -102,4 +105,4 @@ select
 from
 	dm_dm2 dm join included_subjects s on (dm.studyid = s.studyid and dm.siteid = s.siteid and dm.usubjid = s.usubjid)
 	JOIN included_sites si ON (dm.studyid = si.studyid AND dm.siteid = si.siteid);
-		
+	

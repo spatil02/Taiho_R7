@@ -10,10 +10,10 @@ WITH included_studies AS (
                 SELECT  distinct 'TAS120_204'::text AS studyid,
                         'TAS120_204'::text AS studyname,
                         concat(concat('TAS120_204','_'),substring("name",1,3))::text AS siteid,
-                        substring(trim("name"),5)::text AS sitename,
+                        split_part("name",'_',2)::text AS sitename,
                         'Syneos'::text AS croid,
                         'Syneos'::text AS sitecro,
-                        'United States of America'::text AS sitecountry,
+                        'United States'::text AS sitecountry,
                         null::text AS sitecountrycode,
                         'North America'::text AS siteregion,
                         'TRUE'::text as statusapplicable,
@@ -42,7 +42,9 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+       	else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

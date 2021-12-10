@@ -13,9 +13,35 @@ WITH included_studies AS (
                         substring("name",position('_' in "name")+1,length(trim("name"))-8) ::text AS sitename,
                         'Syneos'::text AS croid,
                         'Syneos'::text AS sitecro,
-                        'UNKNOWN'::text AS sitecountry,
+                        case when length(split_part("name",'_',1))=3 then
+                       		 case when split_part("name",'_',1) between '0' and '199' then 'United States'
+                			 	  when split_part("name",'_',1) between '200' and '300' then 'France'
+                			      when split_part("name",'_',1) between '301' and '499' then 'United Kingdom'
+                			      when split_part("name",'_',1) between '500' and '599' then 'Austria'
+                			      when split_part("name",'_',1) between '600' and '649' then 'Germany'
+                			      when split_part("name",'_',1) between '650' and '699' then 'Italy'
+                			      when split_part("name",'_',1) between '700' and '799' then 'Japan'
+                			 	  when split_part("name",'_',1) between '800' and '849' then 'South Korea'
+                			 	  when split_part("name",'_',1) between '850' and '899' then 'Spain'
+                			      when split_part("name",'_',1) between '900' and '999' then 'Singapore'
+                			 else 'UNKNOWN' end 
+                		else 'UNKNOWN'	 
+                		end::text AS sitecountry,
                         null::text AS sitecountrycode,
-                        'UNKNOWN'::text AS siteregion,
+                        case when length(split_part("name",'_',1))=3 then
+                        	 case when split_part("name",'_',1) between '0' and '199' then 'North America'
+                			 	  when split_part("name",'_',1) between '200' and '300' then 'Europe'
+                			      when split_part("name",'_',1) between '301' and '499' then 'Europe'
+                			      when split_part("name",'_',1) between '500' and '599' then 'Europe'
+                			      when split_part("name",'_',1) between '600' and '649' then 'Europe'
+                			      when split_part("name",'_',1) between '650' and '699' then 'Europe'
+                			      when split_part("name",'_',1) between '700' and '799' then 'Asia'
+                			      when split_part("name",'_',1) between '800' and '849' then 'Asia'
+                			      when split_part("name",'_',1) between '850' and '899' then 'Asia'
+                			      when split_part("name",'_',1) between '900' and '999' then 'Asia'
+                			 else 'UNKNOWN' end
+                		else 'UNKNOWN'	 
+                		end::text AS siteregion,
 						True::BOOLEAN AS statusapplicable,
                         null::date AS sitecreationdate,
                         null::date AS siteactivationdate,
@@ -42,7 +68,11 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        --s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        	 when s.sitecountry='South Korea' then 'Korea'
+        else s.sitecountry
+        end::text AS sitecountry,	 
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

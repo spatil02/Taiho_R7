@@ -46,7 +46,7 @@ WITH included_subjects AS (
                         "AETERM_HLGT" ::text AS aehlgt,
                         nullif("AETERM_HLGT_CD",'') ::int AS aehlgtcd,
                         nullif("AETERM_SOC_CD",'') ::int AS aebdsycd,
-                        "AETERM_SOC"::text AS aesoc,
+                        nullif("AETERM_SOC",'')::text AS aesoc,
                         nullif("AETERM_SOC_CD",'')::int AS aesoccd,
                         --coalesce(nullif("AEACTF",''), "AEACTP")::text AS aeacn,
 						concat('Futibatinib:'||"AEACTF",' | ', 'Pembrolizumab:'|| "AEACTP")::text AS aeacn,

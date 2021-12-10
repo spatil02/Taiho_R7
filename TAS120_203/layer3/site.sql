@@ -10,13 +10,13 @@ WITH included_studies AS (
                 SELECT  distinct 'TAS120_203'::text AS studyid,
                         null::text AS studyname,
                         concat(concat('TAS120_203','_'),substring("name",1,3))::text AS siteid,
-                        substring(trim("name"),5)::text AS sitename,
+                        split_part("name",'_',2)::text AS sitename,
                         'PXL'::text AS croid,
                         'PXL'::text AS sitecro,
                        case when "name" in ('101_Dana Farber Cancer Institute',
 					'102_UCSF Medical Center',
 					'103_Henry Ford Hospital',
-					'104_Comprehensive Cancer Centers of Nevada') then 'United States of America' 
+					'104_Comprehensive Cancer Centers of Nevada') then 'United States' 
 						else 'Spain' end::text AS sitecountry,
                         null::text AS sitecountrycode,
                         case when "name" in ('101_Dana Farber Cancer Institute',
@@ -50,7 +50,9 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

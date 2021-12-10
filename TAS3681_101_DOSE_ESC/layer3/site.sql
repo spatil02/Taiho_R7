@@ -27,7 +27,7 @@ WITH included_studies AS (
                         When trim(country_code) = 'TR' then 'Turkey'
                         When trim(country_code) = 'BE' then 'Belgium'
                         When trim(country_code) = 'SG' then 'Singapore'
-                        When trim(country_code) = 'US' then 'United States of America'
+                        When trim(country_code) = 'US' then 'United States'
                         When trim(country_code) = 'NL' then 'Netherlands'
                         When trim(country_code) = 'HK' then 'Hong Kong'
                         When trim(country_code) = 'SE' then 'Sweden'
@@ -36,7 +36,7 @@ WITH included_studies AS (
                         When trim(country_code) = 'PT' then 'Portugal'
                         When trim(country_code) = 'IT' then 'Italy'
                         When trim(country_code) = 'GB' then 'United Kingdom'
-                        else 'United States of America'
+                        else 'United States'
                         end::text AS sitecountry,
                         case
                             when length(trim(SUBSTRING( site_number,POSITION('_' in site_number)+1)))=3
@@ -84,7 +84,9 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

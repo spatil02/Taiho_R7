@@ -15,9 +15,9 @@ WITH included_subjects AS (
                         null::text AS sitecountrycode,
                         null::text AS siteregion,
                         "Subject" ::text AS usubjid,
-                        coalesce (nullif("AETERM_PT",''),'Missing') ::text AS aeterm,
-                        coalesce(nullif("AETERM",''),'Missing') ::text AS aeverbatim,
-                        coalesce(nullif("AETERM_SOC",''),'Missing') ::text AS aebodsys,
+                        nullif("AETERM_PT",'') ::text AS aeterm,
+                        nullif("AETERM",'') ::text AS aeverbatim,
+                        coalesce(nullif("AETERM_SOC",''),'Not Available') ::text AS aebodsys,
                         "AESTDAT" ::timestamp without time zone AS aestdtc,
                         "AEENDAT" ::timestamp without time zone AS aeendtc,
                         case when "AEGRAD"='1 - Mild' then 'G1'
@@ -46,7 +46,7 @@ WITH included_subjects AS (
                         "AETERM_HLGT" ::text AS aehlgt,
                         nullif("AETERM_HLGT_CD",'') ::int AS aehlgtcd,
                         nullif("AETERM_SOC_CD",'') ::int AS aebdsycd,
-                        "AETERM_SOC" ::text AS aesoc,
+                        nullif("AETERM_SOC",'') ::text AS aesoc,
                         nullif("AETERM_SOC_CD",'') ::int AS aesoccd,
                         case when "ACN1" = 1 then 'None'
                         	 when "ACN2" = 1 then 'Dose Reduced'

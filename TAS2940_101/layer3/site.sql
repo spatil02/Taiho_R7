@@ -10,11 +10,11 @@ WITH included_studies AS (
                 SELECT  distinct 'TAS2940_101'::text AS studyid,
                         'TAS2940_101'::text AS studyname,
                         concat(concat('TAS2940_101','_'),substring("name",1,3))::text AS siteid,
-                        substring(trim("name"),5)::text AS sitename,
+                        split_part("name",'_',2)::text AS sitename,
                         'UBC'::text AS croid,
                         'UBC'::text AS sitecro,
                         case when "name" like '%201_Gustave Roussy_201%' then 'France'
-                        else 'United States of America' end::text AS sitecountry,
+                        else 'United States' end::text AS sitecountry,
                         null::text AS sitecountrycode,
                         case when "name" like '%201_Gustave Roussy_201%' then 'Europe'
                         else 'North America' end::text AS siteregion,
@@ -45,7 +45,9 @@ SELECT
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        s.sitecountry::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

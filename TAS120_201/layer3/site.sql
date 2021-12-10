@@ -18,15 +18,15 @@ WITH included_studies AS (
                         'UBC'::text AS sitecro,
                         case 
 							when length(trim(SUBSTRING( "name",1, POSITION('_' in "name")-1)))=3
-								THEN CASE when left(SUBSTRING( "name",1, POSITION('_' in "name")-1),1)='0' then 'US'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '100' and '149' then 'UK'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '150' and '199' then 'ES'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '200' and '249' then 'PT'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '250' and '299' then 'FR'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '300' and '349' then 'IT'
-										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '350' and '399' then 'CA'
+								THEN CASE when left(SUBSTRING( "name",1, POSITION('_' in "name")-1),1)='0' then 'United States'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '100' and '149' then 'United Kingdom'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '150' and '199' then 'Spain'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '200' and '249' then 'Portugal'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '250' and '299' then 'France'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '300' and '349' then 'Italy'
+										  when SUBSTRING( "name",1, POSITION('_' in "name")-1) between '350' and '399' then 'Canada'
 									 end
-						else 'US' end::text AS sitecountry,
+						else 'United States' end::text AS sitecountry,
                         case 
 							when length(trim(SUBSTRING( "name",1, POSITION('_' in "name")-1)))=3
 								 THEN CASE when left(SUBSTRING( "name",1, POSITION('_' in "name")-1),1)='0' then 'North America'
@@ -76,24 +76,9 @@ WITH included_studies AS (
         s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-       Case
-		When trim(s.sitecountry) = 'KR' then 'South Korea'
-		When trim(s.sitecountry) = 'JP' then 'Japan'
-		When trim(s.sitecountry) = 'DE' then 'Germany'
-		When trim(s.sitecountry) = 'UK' then 'United Kingdom'
-		When trim(s.sitecountry) = 'ES' then 'Spain'
-		When trim(s.sitecountry) = 'TR' then 'Turkey'
-		When trim(s.sitecountry) = 'BE' then 'Belgium'
-		When trim(s.sitecountry) = 'SG' then 'Singapore'
-		When trim(s.sitecountry) = 'US' then 'United States of America'
-		When trim(s.sitecountry) = 'NL' then 'Netherlands'
-		When trim(s.sitecountry) = 'HK' then 'Hong Kong'
-		When trim(s.sitecountry) = 'SE' then 'Sweden'
-		When trim(s.sitecountry) = 'CA' then 'Canada'
-		When trim(s.sitecountry) = 'FR' then 'France'
-		When trim(s.sitecountry) = 'PT' then 'Portugal'
-		When trim(s.sitecountry) = 'IT' then 'Italy'
-		end::text AS sitecountry,
+       	case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

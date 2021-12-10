@@ -2,13 +2,14 @@
 CCDM DS mapping
 Notes: Standard mapping to CCDM DS table
 */
+
 WITH included_subjects AS (
                 SELECT DISTINCT studyid, siteid, usubjid FROM subject ),
 
      ds_data AS (
                 ---Disposition Event: All Subjects										
 (SELECT distinct project ::TEXT AS studyid,
-                        concat(concat(dm."project",'_'),substring(dm."SiteNumber",9,11)) ::TEXT AS siteid,
+                        project||substring("SiteNumber",position ('_' in "SiteNumber")) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         1.0::NUMERIC AS dsseq, --deprecated
                         'All Subjects'::TEXT AS dscat,
@@ -21,15 +22,17 @@ WITH included_subjects AS (
  	union all
     --Disposition Event: Consented
 										 
- (SELECT  "project" ::TEXT AS studyid,
-                        concat(concat("project",'_'),substring("SiteNumber",8,10)) ::TEXT AS siteid,
+  (select studyid,siteid,usubjid,dsseq,dscat,dsscat,dsterm,max(dsstdtc)  from (SELECT   "project" ::TEXT AS studyid,
+                        project||substring("SiteNumber",position ('_' in "SiteNumber")) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         2.0::NUMERIC AS dsseq, --deprecated
                         'Consent'::TEXT AS dscat,
                         null::TEXT AS dsscat,
                         'Consented'::TEXT AS dsterm,
-                         case when "ICRYN" = 'Yes' THEN "ICRDAT" end::DATE AS dsstdtc       
-                       from tas2940_101."IC" i
+                         case when "ICRYN" = 'Yes' THEN "ICRDAT" else "ICDAT" 
+                         end::DATE AS dsstdtc       
+                       from tas2940_101."IC" i )a group by studyid,siteid,usubjid,dsseq,dscat,dsscat,dsterm
+
                         )					
                         
  union all 
@@ -37,7 +40,7 @@ WITH included_subjects AS (
 --Disposition Event: Failed Screen										 
  
   (SELECT distinct "project" ::TEXT AS studyid,
-                        concat(concat(ie."project",'_'),substring(ie."SiteNumber",8,10)) ::TEXT AS siteid,
+                        project||substring("SiteNumber",position ('_' in "SiteNumber")) ::TEXT AS siteid,
                         ie."Subject" ::TEXT AS usubjid,
                         2.1::NUMERIC AS dsseq, --deprecated
                         'Enrollment'::TEXT AS dscat,
@@ -148,7 +151,7 @@ WITH included_subjects AS (
                         "Subject" ::TEXT AS usubjid,
                         4.2::NUMERIC AS dsseq, --deprecated
                         'Randomization'::TEXT AS dscat,
-                        "EOSREAS"::TEXT AS dsscat,
+                        null::TEXT AS dsscat,
                         'Discontinued before Treatment'::TEXT AS dsterm,
                         "EOSDAT" ::DATE AS dsstdtc
                         from tas2940_101."EOS" eos
@@ -178,7 +181,6 @@ SELECT
         /*KEY , now()::TIMESTAMP WITH TIME ZONE AS comprehend_update_time KEY*/
 FROM ds_data ds
 JOIN included_subjects s ON (ds.studyid = s.studyid AND ds.siteid = s.siteid AND ds.usubjid = s.usubjid);
-
 
 
 

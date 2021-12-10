@@ -24,24 +24,24 @@ WITH included_studies AS (
                         case 
 							when length("site_#") = 3
 								 THEN CASE 
-										   when left("site_#",1)='1' then 'US'
-										   when "site_#" between '200' and '249' then 'UK'
-										   when "site_#" between '250' and '299' then 'SE'
-										   when "site_#" between '300' and '349' then 'ES'
-										   when "site_#" between '350' and '399' then 'NL'
-										   when "site_#" between '400' and '449' then 'IT'
-										   when "site_#" between '450' and '499' then 'DE'
-										   when "site_#" between '500' and '549' then 'FR'
-										   when "site_#" between '550' and '599' then 'BE'
-										   when "site_#" between '600' and '649' then 'TR'
-										   when "site_#" between '650' and '699' then 'SG'
-										   when "site_#" between '700' and '749' then 'KR'
-										   when "site_#" between '750' and '799' then 'HK'
-										   when "site_#" between '800' and '849' then 'JP'
-										   when "site_#" between '900' and '949' then 'PT'
-										   else 'US'
+										   when left("site_#",1)='1' then 'United States'
+										   when "site_#" between '200' and '249' then 'United Kingdom'
+										   when "site_#" between '250' and '299' then 'Sweden'
+										   when "site_#" between '300' and '349' then 'Spain'
+										   when "site_#" between '350' and '399' then 'Netherlands'
+										   when "site_#" between '400' and '449' then 'Italy'
+										   when "site_#" between '450' and '499' then 'Germany'
+										   when "site_#" between '500' and '549' then 'France'
+										   when "site_#" between '550' and '599' then 'Belgium'
+										   when "site_#" between '600' and '649' then 'Turkey'
+										   when "site_#" between '650' and '699' then 'Singapore'
+										   when "site_#" between '700' and '749' then 'South Korea'
+										   when "site_#" between '750' and '799' then 'Hong Kong'
+										   when "site_#" between '800' and '849' then 'Japan'
+										   when "site_#" between '900' and '949' then 'Portugal'
+										   else 'United States'
 										 end
-						else 'US' end::text AS sitecountry,
+						else 'United States' end::text AS sitecountry,
 						
                         case 
 							when length("site_#") = 3
@@ -93,24 +93,9 @@ SELECT
 		s.sitename::text AS sitename,
         s.croid::text AS croid,
         s.sitecro::text AS sitecro,
-        Case
-		When trim(s.sitecountry) = 'KR' then 'South Korea'
-		When trim(s.sitecountry) = 'JP' then 'Japan'
-		When trim(s.sitecountry) = 'DE' then 'Germany'
-		When trim(s.sitecountry) = 'UK' then 'United Kingdom'
-		When trim(s.sitecountry) = 'ES' then 'Spain'
-		When trim(s.sitecountry) = 'TR' then 'Turkey'
-		When trim(s.sitecountry) = 'BE' then 'Belgium'
-		When trim(s.sitecountry) = 'SG' then 'Singapore'
-		When trim(s.sitecountry) = 'US' then 'United States of America'
-		When trim(s.sitecountry) = 'NL' then 'Netherlands'
-		When trim(s.sitecountry) = 'HK' then 'Hong Kong'
-		When trim(s.sitecountry) = 'SE' then 'Sweden'
-		When trim(s.sitecountry) = 'CA' then 'Canada'
-		When trim(s.sitecountry) = 'FR' then 'France'
-		When trim(s.sitecountry) = 'PT' then 'Portugal'
-		When trim(s.sitecountry) = 'IT' then 'Italy'
-		end::text AS sitecountry,
+        case when s.sitecountry='United States' then 'United States of America'
+        else s.sitecountry
+        end::text AS sitecountry,
         cc.countrycode3_iso::text AS sitecountrycode,
         s.siteregion::text AS siteregion,
         s.sitecreationdate::date AS sitecreationdate,

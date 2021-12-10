@@ -15,9 +15,9 @@ WITH included_subjects AS (
                         null::text AS sitecountrycode,
                         null::text AS siteregion,
                         "Subject" ::text AS usubjid,
-                        "AETERM_PT" ::text AS aeterm,
-                        "AETERM" ::text AS aeverbatim,
-                        "AETERM_SOC" ::text AS aebodsys,
+                        nullif("AETERM_PT",'') ::text AS aeterm,
+                        nullif("AETERM",'')::text AS aeverbatim,
+                        coalesce(nullif("AETERM_SOC",''),'Not Available') ::text AS aebodsys,
                         "AESTDAT" ::timestamp without time zone AS aestdtc,
                         "AEENDAT" ::timestamp without time zone AS aeendtc,
                         case when "AEGR" ='1' then 'G1'
@@ -46,7 +46,7 @@ WITH included_subjects AS (
                         "AETERM_HLGT" ::text AS aehlgt,
                         nullif("AETERM_HLGT_CD",'') ::int AS aehlgtcd,
                         nullif("AETERM_SOC_CD",'') ::int AS aebdsycd,
-                        "AETERM_SOC"::text AS aesoc,
+                        nullif("AETERM_SOC",'')::text AS aesoc,
                         nullif("AETERM_SOC_CD",'')::int AS aesoccd,
                         --coalesce(nullif("AEACTF",''),"AEACTP")::text AS aeacn,
 						case 					   when "AEACTSN" = 1 then concat('Futibatinib:','None')
