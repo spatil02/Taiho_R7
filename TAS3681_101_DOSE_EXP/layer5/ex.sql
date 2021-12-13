@@ -76,11 +76,11 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
                 NULL::					text      AS exdosfrm,
                 NULL::					text      AS exdosfrq,
                 NULL::					NUMERIC   AS exdostot,
-                ex2."EXOSTDAT"::			DATE      AS exstdtc,
+                ex2."EXOSTDAT" ::			DATE      AS exstdtc,
                 ex2."EXOSTDAT"::time without time zone AS exsttm,
                 NULL::					INT 	  AS exstdy,
-                ex2."EXOENDAT"::			DATE      AS exendtc,
-                ex2."EXOENDAT"::time without time zone AS exendtm,
+                nullif(ex2."EXOENDAT",'')::			DATE      AS exendtc,
+                REGEXP_REPLACE(upper(nullif("EXOENDAT",'')),'[A-Z]',' ')::time without time zone AS exendtm,
                 NULL::					INT       AS exendy,
                 NULL::					text      AS exdur
            FROM tas3681_101."EXO2" ex2

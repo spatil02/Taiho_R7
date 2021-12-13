@@ -45,7 +45,9 @@ sv.svendtc from(
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                 trim(visit) as visit, 
+                                 trim--(REGEXP_REPLACE
+                                 (REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(visit,'<W[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation','')--,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+                                 ) as visit, 
                                  visitseq,
                                 svstdtc,
                                 svendtc
@@ -56,7 +58,9 @@ sv.svendtc from(
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                trim(visit) as visit,
+                                 trim--(REGEXP_REPLACE
+                                 (REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(visit,'<W[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation','')--,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+                                 ) as visit, 
                                 1 visitseq,
                                 min(svstdtc) as svstdtc,
                                 max(svendtc) as svendtc
@@ -67,7 +71,7 @@ sv.svendtc from(
      included_sites AS (
                   SELECT DISTINCT studyid,studyname,siteid,sitecountry,sitecountrycode,sitename,siteregion FROM site)
 
-SELECT 
+SELECT distinct
         /*KEY (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid)::text AS comprehendid, KEY*/
         sv.studyid::text AS studyid,
         sv.studyname::text AS studyname,
@@ -86,5 +90,6 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
-LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
+LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid)
+;
 
