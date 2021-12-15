@@ -4,7 +4,7 @@ Project name : Taiho*/
 
 drop table if exists ckpi."ckpi_missing_stream_pages_new";
 
-create table ckpi."ckpi_missing_stream_pages_new" as 
+create table ckpi."ckpi_missing_stream_pages_new" as
 with study_data as
 (select study.studyid as "Study" from cqs.study ),
 site_data as
@@ -130,7 +130,9 @@ select
 'TAS120_202'::text as "Study",
 concat('TAS120_202','_',left( sitename::text,3))as "Site",
 "subjectname"::text as "Subject",
-trim(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: TEXT as "Visit" ,
+case when "foldername" like '%Cycle __' then replace("foldername",'Cycle','Cycle ') else
+--trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''),'[0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) end:: TEXT as "Visit" ,
+trim(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))end:: TEXT as "Visit" ,
 "pagesexpected_total"::text as "Pages Expected",
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
@@ -142,7 +144,7 @@ select
 'TAS3681_101_DOSE_ESC'::text as "Study",
 concat('TAS3681101','_',left( sitename::text,3))as "Site",
 "subjectname"::text as "Subject",
-trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),'<W[0-9]DA[0-9]/>\sExpansion',''),'<W[0-9]DA[0-9][0-9]/>\sExpansion',''),'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: TEXT AS Visit, 
+trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),'<W[0-9]DA[0-9]/>\sExpansion',''),'<W[0-9]DA[0-9][0-9]/>\sExpansion',''),'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: TEXT AS Visit,
 "pagesexpected_total"::text as "Pages Expected",
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
@@ -157,7 +159,7 @@ select
 'TAS3681_101_DOSE_EXP'::text as "Study",
 concat('TAS3681101','_',left( sitename::text,3))as "Site",
 "subjectname"::text as "Subject",
-trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),'<W[0-9]DA[0-9]/>\sExpansion',''),'<W[0-9]DA[0-9][0-9]/>\sExpansion',''),'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: TEXT AS Visit, 
+trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("foldername",'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),'<W[0-9]DA[0-9]/>\sExpansion',''),'<W[0-9]DA[0-9][0-9]/>\sExpansion',''),'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'\s\([0-9]\)',''),'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: TEXT AS Visit,
 "pagesexpected_total"::text as "Pages Expected",
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
@@ -225,9 +227,9 @@ select
 "Completed Pages",
 "Form",
 (case
-when --"Pages Expected"::text = '1'and 
+when --"Pages Expected"::text = '1'and
 "Completed Pages"::text = '1' then 0
-when --"Pages Expected"::text = '1'and 
+when --"Pages Expected"::text = '1'and
 "Completed Pages"::text = '0' then 1
 else null end)::int as "Missing Pages"
 from "pcm_pages_data") ,
@@ -314,7 +316,7 @@ drop table if exists ckpi."ckpi_missing_stream_pages_orig";
 
 alter table if exists ckpi."ckpi_missing_stream_pages" rename to "ckpi_missing_stream_pages_orig";
 
-alter table if exists ckpi."ckpi_missing_stream_pages_new" rename to "ckpi_missing_stream_pages";	
+alter table if exists ckpi."ckpi_missing_stream_pages_new" rename to "ckpi_missing_stream_pages";
 
 --ALTER TABLE ckpi."ckpi_missing_stream_pages" OWNER TO "taiho-dev-app-clinical-master-write";
 
