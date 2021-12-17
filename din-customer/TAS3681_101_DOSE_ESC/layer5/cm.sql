@@ -37,7 +37,7 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
                         null::time without time zone AS cmsttm,
                         null::time without time zone AS cmentm
                 FROM 
-( select *,concat(replace(replace(substring(upper("CMSTDAT_RAW"),1,2),'UN','01'),'UK','01'),replace(substring(upper("CMSTDAT_RAW"),3),'UNK','Jan')) AS cmstdtc,
+( select *,concat(replace(replace(substring(upper(case when length("CMSTDAT_RAW")<10 then null else "CMSTDAT_RAW" end),1,2),'UN','01'),'UK','01'),replace(substring(upper(case when length("CMSTDAT_RAW")<10 then null else "CMSTDAT_RAW" end),3),'UNK','Jan')) AS cmstdtc,
 	     concat(replace(replace(substring(upper("CMENDAT_RAW"),1,2),'UN','01'),'UK','01'),replace(substring(upper("CMENDAT_RAW"),3),'UNK','Jan')) AS cmendtc
 from tas3681_101."CM"	
 )cm 
@@ -80,3 +80,4 @@ SELECT
 FROM cm_data cm
 JOIN included_subjects s ON (cm.studyid = s.studyid AND cm.siteid = s.siteid AND cm.usubjid = s.usubjid)
 JOIN included_sites si ON (cm.studyid = si.studyid AND cm.siteid = si.siteid);
+
