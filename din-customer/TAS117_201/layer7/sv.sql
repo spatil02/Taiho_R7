@@ -12,7 +12,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
                         "VISITDAT" ::date AS svendtc
@@ -24,7 +24,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
                         "VISITDAT" ::date AS svendtc
@@ -36,7 +36,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
                         "VISITDAT" ::date AS svendtc
@@ -48,7 +48,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
                         "VISITDAT" ::date AS svendtc
@@ -60,7 +60,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         max("VISITDAT") ::date AS svstdtc,
                         max("VISITDAT") ::date AS svendtc
@@ -72,7 +72,7 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        "FolderName" ::text AS visit,
+                        "InstanceName" ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISIT"::date AS svstdtc,
                         "VISIT" ::date AS svendtc

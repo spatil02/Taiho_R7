@@ -22,7 +22,7 @@ sv.svendtc from(
                         concat(concat('TAS2940_101','_'),substring("SiteNumber",9,11))::text AS siteid,
                         "Subject"::text AS usubjid, 
                         "FolderSeq"::numeric AS visitnum,
-                        "FolderName"::text AS visit,
+                        "InstanceName"::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc from TAS2940_101."VISIT"
