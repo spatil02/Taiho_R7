@@ -4,7 +4,7 @@ Project name : Taiho*/
 
 drop table if exists ckpi."ckpi_missing_stream_pages_new";
 
-create table ckpi."ckpi_missing_stream_pages_new" as 
+create table ckpi."ckpi_missing_stream_pages_new" as
 with study_data as
 (select study.studyid as "Study" from cqs.study ),
 site_data as
@@ -83,6 +83,26 @@ Select distinct'TAS3681_101_DOSE_EXP' as Studyid, Subjectname as subject,  Folde
 from tas3681_101.stream_page_status s  left join tv_internal.tv_tracker_list t on 'TAS3681-101'=t.studyid and s.FolderName=t.Visit
 where Subjectname in (select usubjid from cqs.subject where studyid='TAS3681_101_DOSE_EXP')
 
+union all
+
+  Select distinct'TAS117_201' as Studyid, Subjectname as subject,  Foldername as visit, visit_number  :: numeric as visit_Num
+from tas117_201.stream_page_status s  left join tv_internal.tv_tracker_list t on 'TAS117-201'=t.studyid and s.FolderName=t.Visit
+
+union all
+
+  Select distinct'TAS120_203' as Studyid, Subjectname as subject,  Foldername as visit, visit_number  :: numeric as visit_Num
+from tas120_203.stream_page_status s  left join tv_internal.tv_tracker_list t on 'TAS120-203'=t.studyid and s.FolderName=t.Visit
+
+union all
+
+  Select distinct'TAS120_204' as Studyid, Subjectname as subject,  Foldername as visit, visit_number  :: numeric as visit_Num
+from tas120_204.stream_page_status s  left join tv_internal.tv_tracker_list t on 'TAS120-204'=t.studyid and s.FolderName=t.Visit
+
+union all
+
+  Select distinct'TAS2940_101' as Studyid, Subjectname as subject,  Foldername as visit, visit_number  :: numeric as visit_Num
+from tas2940_101.stream_page_status s  left join tv_internal.tv_tracker_list t on 'TAS2940-101'=t.studyid and s.FolderName=t.Visit
+
 )a  
 )
 
@@ -120,7 +140,7 @@ select distinct Studyid, subject, flg,visit,visit1,foldername_1,visit_num,visit2
 coalesce(nullif(replace(foldername_1,visit2,''),''),'0')::int as t from (
 select distinct Studyid, subject, flg,visit,visit1,foldername_1 as foldername_1,visit_num,
 case when trim(right(foldername_1,2)) ~  '^\d+(\.\d+)?$' and foldername_1 not like '%Cycle%' and foldername_1 not like '%Week%'
-then regexp_replace(regexp_replace(foldername_1,'\s[0-9][0-9]',''),'\s[0-9]','') 
+then regexp_replace(regexp_replace(foldername_1,'\s[0-9][0-9]',''),'\s[0-9]','')
 else foldername_1 end as visit2 from(
 select distinct Studyid, subject, flg,visit,visit1,trim(foldername_1) as foldername_1,visit_num
 
@@ -133,7 +153,7 @@ then
   case
   when visit like '%)%'
   then split_part(visit,')',1) ||') '|| rank
-    else reverse(substring (reverse(visit),12))||coalesce(rank,'')
+    else reverse(substring (reverse(visit),12))||coalesce(rank:: text,'')
   end
 when (visit like '%(_)%' or visit like '%(__)%') and visit not like '%Cycle%'
 then regexp_replace(regexp_replace(visit,'\s\([0-9]\)',' '),'\s\([0-9][0-9]\)',' ') ||
@@ -150,7 +170,7 @@ visit,
 visit1,
 null::date as flg,
 visit_num,
-null:: text rank
+null:: int rank
 from t_visit
 where visit not in ( select  distinct visit
 from ( select visit,REGEXP_MATCHES(visit,'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]')
@@ -158,9 +178,11 @@ from ( select visit,REGEXP_MATCHES(visit,'[0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9
                 )a)
        
 union all
-       
+ select studyid, Subject, visit,visit1,flg,visit_num, (rank + 1) as rank from(      
 select studyid, Subject, visit,visit1,
-flg,visit_num,coalesce(lag(r,1)over(partition by studyid, subject,visit2 order by r):: text,'') as rank
+flg,visit_num,
+--coalesce(lag(r,1)over(partition by studyid, subject,visit2 order by r):: text,'') as rank
+lag(r,1)over(partition by studyid, subject,visit2 order by r):: int as rank
 from (
 select studyid, Subject, visit,visit1,
 flg,visit2,visit_num,rank () over(partition by studyid, Subject,visit2 order by flg ) as r
@@ -177,16 +199,17 @@ order by subject
 order by flg
 )b
 )e
+)f
 
               )visit
               ) q
               )e
               )f
               )g
-			)h order by visit_num,visit2,rank
-			
-		  
-), 
+)h order by visit_num,visit2,rank
+
+ 
+),
 
 DTH_data as
 (
@@ -336,7 +359,7 @@ select
 'TAS120_202'::text as "Study",
 concat('TAS120_202','_',left( sitename::text,3))as "Site",
 "subjectname"::text as "Subject",
-case when "foldername" like '%Cycle __' then replace("foldername",'Cycle','Cycle ') else 
+case when "foldername" like '%Cycle __' then replace("foldername",'Cycle','Cycle ') else
 trim(
 REGEXP_REPLACE(
 REGEXP_REPLACE(
@@ -393,7 +416,7 @@ REGEXP_REPLACE(
 ),'\s\([0-1]\)',''
 ),'<WK[0-9]D[0-9]/>',''
 ),'<WK[0-9]D[0-9][0-9]/>',''
-)):: TEXT AS Visit, 
+)):: TEXT AS Visit,
 "pagesexpected_total"::text as "Pages Expected",
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
@@ -430,7 +453,7 @@ REGEXP_REPLACE(
 ),'\s\([0-1]\)',''
 ),'<WK[0-9]D[0-9]/>',''
 ),'<WK[0-9]D[0-9][0-9]/>',''
-)):: TEXT AS Visit, 
+)):: TEXT AS Visit,
 "pagesexpected_total"::text as "Pages Expected",
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
@@ -573,8 +596,6 @@ REGEXP_REPLACE(
 "pagesentered"::text as "Completed Pages",
 "formname" as "Form"
 from TAS2940_101.stream_page_status pagesentered
---where "pagesexpected_todate"::numeric=1
---group by sitename, "subjectname",foldername,"formname"
 ),
 pcm_pages as (
 select
@@ -586,12 +607,13 @@ select
 "Completed Pages",
 "Form",
 (case
-when --"Pages Expected"::text = '1'and 
+when --"Pages Expected"::text = '1'and
 "Completed Pages"::text = '1' then 0
-when --"Pages Expected"::text = '1'and 
+when --"Pages Expected"::text = '1'and
 "Completed Pages"::text = '0' then 1
 else null end)::int as "Missing Pages"
 from "pcm_pages_data") ,
+
 missing_pages as
 (
 select
@@ -617,6 +639,8 @@ vst."Visit Number",
 vst."Trial Visit Name" as "Visit1"
 ,vd.visit2 as visit2
 ,vd.rank as rank
+,pcm."Visit" as pcmvisit
+,vd.visit as vdvisit
 from pcm_pages pcm
 left outer join days_on_study_data dsd on
 pcm."Study" = dsd."Study"
@@ -637,7 +661,7 @@ left outer join Screen_Failed_Date screen_failed on
 pcm."Study" = screen_failed."Study"
 and pcm."Site" = screen_failed."Site"
 and pcm."Subject" = screen_failed."Subject"
-left join visit_data vd on 
+left join visit_data vd on
 pcm."Study" = vd.studyid
 and pcm."Subject" = vd.subject
 and lower(trim(pcm."Visit")) = lower(trim(vd.visit))
@@ -678,26 +702,16 @@ visit2,
 rank,
 "Visit1"
 from missing_pages
-left join cqs.tv on 
-"Study" = tv.studyid 
+left join cqs.tv on
+"Study" = tv.studyid
 and "Visit" = tv.visit
-where  "Form" not in ('IRT Load place holder','CTCAE Grading')
---order by "Study","Cohort","Site","Subject","Visit Number", length("Visit"), "Visit"
-;
---WHERE  "Subject" = '101-005-P1'
---where "Visit1" = "Visit"
-
-
-
-
---WHERE  "Subject" = '101-005-P1'
---where "Visit1" = "Visit"
+where  "Form" not in ('IRT Load place holder','CTCAE Grading');
 
 drop table if exists ckpi."ckpi_missing_stream_pages_orig";
 
 alter table if exists ckpi."ckpi_missing_stream_pages" rename to "ckpi_missing_stream_pages_orig";
 
-alter table if exists ckpi."ckpi_missing_stream_pages_new" rename to "ckpi_missing_stream_pages";	
+alter table if exists ckpi."ckpi_missing_stream_pages_new" rename to "ckpi_missing_stream_pages";
 
 --ALTER TABLE ckpi."ckpi_missing_stream_pages" OWNER TO "taiho-dev-app-clinical-master-write";
 
