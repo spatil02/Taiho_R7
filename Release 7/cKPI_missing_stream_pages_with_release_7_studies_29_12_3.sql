@@ -705,7 +705,7 @@ from missing_pages
 left join cqs.tv on
 "Study" = tv.studyid
 and "Visit" = tv.visit
-where  "Form" not in ('IRT Load place holder','CTCAE Grading');
+where  "Form" not in ('IRT Load place holder','CTCAE Grading','Impact Harmony Data Transfer','CTMS Integration');
 
 drop table if exists ckpi."ckpi_missing_stream_pages_orig";
 

@@ -29,8 +29,9 @@ WITH included_subjects AS (
                         'Consent'::TEXT AS dscat,
                         null::TEXT AS dsscat,
                         'Consented'::TEXT AS dsterm,
-                        case when "ICRYN" ='Yes' then "ICRDAT" else "ICDAT" end::DATE AS dsstdtc  
-                        from tas120_204."IC" i)					---column does not exists
+                        max(case when "ICRYN" ='Yes' then "ICRDAT" else "ICDAT" end)::DATE AS dsstdtc  
+                        from tas120_204."IC" i
+						group by 1,2,3,4,5,6,7)					---column does not exists
                         
  union all 
 
