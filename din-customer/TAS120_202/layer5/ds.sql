@@ -66,7 +66,15 @@ WITH included_subjects AS (
 				
 				--Disposition Event: Failed Screen
 				
-				select * from (
+				select studyid,
+	   				   siteid,
+	   				   usubjid,
+	   				   dsseq,
+	   				   dscat,
+	   				   dsterm,
+	   				   dsstdtc,
+	   				   dsscat
+				from (
 				select ie."project"::text AS studyid,
 						ie."SiteNumber"::text AS siteid,
 						ie."Subject"::text AS usubjid,
@@ -78,18 +86,17 @@ WITH included_subjects AS (
 								then null
 							else concat(concat("IECAT",' '), "IETESTCD")
 						end::TEXT AS dsscat
+						,"RecordPosition"
 				from "tas120_202"."IE"  ie)a
-				where (studyid, siteid, usubjid, dsseq, dscat, dsterm, dsstdtc) in
+				where (studyid, siteid, usubjid, dsstdtc,"RecordPosition") in
 				(SELECT  ie."project"::text AS studyid,
 						ie."SiteNumber"::text AS siteid,
 						ie."Subject"::text AS usubjid,
-						2.1::NUMERIC AS dsseq,
-						'Enrollment'::text AS dscat,
-						'Failed Screen'::text AS dsterm,
 						max(COALESCE(ie."MinCreated" ,ie."RecordDate"))::DATE AS dsstdtc
+						,max("RecordPosition")
 				from "tas120_202"."IE" as ie
 				where ie."IEYN" = 'No'
-				group by 1,2,3,4,5,6)				
+				group by 1,2,3)					
 				union all 
 				
 				--Disposition Event: Enrollment
@@ -208,4 +215,6 @@ SELECT
         /*KEY , now()::TIMESTAMP WITH TIME ZONE AS comprehend_update_time KEY*/
 FROM ds_data ds
 JOIN included_subjects s ON (ds.studyid = s.studyid AND ds.siteid = s.siteid AND ds.usubjid = s.usubjid);
+
+
 
