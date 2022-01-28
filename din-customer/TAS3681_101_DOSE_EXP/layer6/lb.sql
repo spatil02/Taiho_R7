@@ -1,7 +1,3 @@
-/*
-CCDM LB mapping
-Notes: Standard mapping to CCDM LB table
-*/
 WITH
     included_subjects AS
     (
@@ -50,11 +46,11 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
             lb1."AnalyteValue"::text                        AS lborres,
             NULL::text                                      AS lbstat,
             NULL::text                                      AS lbreasnd,
-            lb1."LabLow"::NUMERIC                           AS lbstnrlo,
-            lb1."LabHigh"::NUMERIC                          AS lbstnrhi,
+            lb1."StdLow"::NUMERIC                           AS lbstnrlo,
+            lb1."StdHigh"::NUMERIC                          AS lbstnrhi,
             lb1."LabUnits"::text                            AS lborresu,
-            convert_to_numeric(lb1."AnalyteValue")::NUMERIC AS lbstresn,
-            lb1."LabUnits"::text                            AS lbstresu,
+            lb1."StdValue"::NUMERIC                         AS lbstresn,
+            lb1."StdUnits"::text                            AS lbstresu,
             NULL::TIME without TIME zone                    AS lbtm,
             NULL::text                                      AS lbblfl,
             NULL::text                                      AS lbnrind,
@@ -436,4 +432,5 @@ ON
     AND lb.siteid = s.siteid
     AND lb.usubjid = s.usubjid)
 	JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
-
+	
+	
