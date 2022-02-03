@@ -1549,9 +1549,9 @@ ALLDATA as (
 
 Select		t.Study,
 			case 
-				when t.Study like'%TAS3681_101%' 
-					then t.SiteNumber 
-					else t.study||'_'||split_part(t.SiteNumber,'_',2)
+				when (t.Study like'%TAS3681_101%' or t.Study = 'TAS120_201' or  t.Study = 'TAS120_202')
+					then t.SiteNumber 				
+				else t.study||'_'||split_part(t.SiteNumber,'_',2)
 			 end as SiteNumber,
 			t.Subject,
 			t.InstanceName,
@@ -1630,9 +1630,9 @@ on   		( t.Study = st.studyid AND t.Subject = st.usubjid )
 left join 	cqs.dm
 on 			(t.Study = dm.Studyid AND
 			(case 
-				when t.Study like'%TAS3681_101%'
-					then t.SiteNumber 
-					else t.study||'_'||split_part(t.SiteNumber,'_',2)
+				when (t.Study like'%TAS3681_101%' or t.Study = 'TAS120_201' or  t.Study = 'TAS120_202')
+					then t.SiteNumber 				
+				else t.study||'_'||split_part(t.SiteNumber,'_',2)
 			 end) = dm.Siteid AND
 			 t.Subject = dm.usubjid
 			)
@@ -1652,6 +1652,8 @@ alter table if exists ckpi."cKPI101_TA" rename to "cKPI101_TA_orig";
 
 alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";			
 
---ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-stage-app-clinical-master-write";	
+--ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-dev-app-clinical-master-write";	
 
---ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-stage-app-clinical-master-write";
+--ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";
+
+
