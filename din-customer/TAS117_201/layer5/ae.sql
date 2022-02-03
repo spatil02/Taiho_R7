@@ -23,7 +23,7 @@ WITH included_subjects AS (
                         case when "AEGRAD"='1 - Mild' then 'G1'
                         			  when "AEGRAD"='2 - Moderate' then 'G2'
                         			  when "AEGRAD"='3 - Severe' then 'G3'
-                        			  when "AEGRAD"='4 - Life Threatening' then 'G4'
+                        			  when "AEGRAD"='4 - Life-threatening' then 'G4'
                         			  when "AEGRAD"='5 - Death' then 'G5'
                         			  when ("AEGRAD"='' or "AEGRAD" is null) then 'Missing'
                         end::text AS aesev,
@@ -31,7 +31,7 @@ WITH included_subjects AS (
                              when "AESER" ='No' then 'Non-Serious'
                              when ("AESER"='' or "AESER" is null) then 'Unknown'
                         end::text AS aeser,
-                        case when lower("AEREL") in ('possibly related','definitely related','probably related') then 'Yes'
+                        case when lower("AEREL") in ('related','possibly related','definitely related','probably related') then 'Yes'
                         	 when lower("AEREL") in ('not related','unrelated') then 'No'
                         	 else 'Missing'
                         end::text AS aerelnst,
@@ -118,4 +118,6 @@ SELECT
 FROM ae_data ae
 JOIN included_subjects s ON (ae.studyid = s.studyid AND ae.siteid = s.siteid AND ae.usubjid = s.usubjid)
 join site_data sd on (ae.studyid = sd.studyid AND ae.siteid = sd.siteid);
+
+
 
