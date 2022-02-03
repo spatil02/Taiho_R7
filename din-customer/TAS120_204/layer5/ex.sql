@@ -26,7 +26,7 @@ WITH included_subjects AS (
                         null::text AS exdosfrm,
                         null::text AS exdosfrq,
                         null::numeric AS exdostot,
-                        "EXOSTDAT" ::date AS exstdtc,
+                        coalesce("EXOCYCSDT","EXOSTDAT") ::date AS exstdtc,
                         null::time AS exsttm,
                         null::int AS exstdy,
                         "EXOENDAT" ::date AS exendtc,
@@ -55,7 +55,7 @@ WITH included_subjects AS (
                         null::text AS exdosfrm,
                         null::text AS exdosfrq,
                         null::numeric AS exdostot,
-                        "EXOSTDAT"::date AS exstdtc,
+                        coalesce("EXOCYCSDT","EXOSTDAT")::date AS exstdtc,
                         null::time AS exsttm,
                         null::int AS exstdy,
                         "EXOENDAT"::date AS exendtc,
@@ -101,5 +101,6 @@ SELECT
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
 join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
+
 
 

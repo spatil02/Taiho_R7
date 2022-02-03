@@ -52,7 +52,7 @@ SELECT
         NULL::text	AS	exdosfrm,
         NULL::text	AS	exdosfrq,
         NULL::text	AS	exdostot,
-        "EXOSTDAT"::text	AS	exstdtc,
+        coalesce("EXOCYCSDT","EXOSTDAT")::text	AS	exstdtc,
         NULL::time without time zone	AS	exsttm,
         NULL::text	AS	exstdy,
         "EXOENDAT"::date	AS	exendtc,
@@ -122,6 +122,7 @@ SELECT
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
 JOIN included_sites si ON (ex.studyid = si.studyid AND ex.siteid = si.siteid);
+
 
 
 
