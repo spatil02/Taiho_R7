@@ -106,7 +106,7 @@ null as "RSLBR_DESC",
 null as "SLBL_DESC" 
 from tas2940_101."OPE" op 
 left join 
-tas120_204."VISIT" v on
+tas2940_101."VISIT" v on
 op."project" = v."project" and
 op."SiteNumber" = v."SiteNumber" and
 op."Subject" = v."Subject" and
