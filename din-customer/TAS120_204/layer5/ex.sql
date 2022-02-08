@@ -30,13 +30,14 @@ WITH included_subjects AS (
 						case when "EXOADJYN" = 'Yes' then "EXOSTDAT" else "EXOCYCSDT" end ::date AS exstdtc,
                         null::time AS exsttm,
                         null::int AS exstdy,
-                        "EXOENDAT" ::date AS exendtc,
+                        --"EXOENDAT" ::date AS exendtc,
+                        case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
                         null::time AS exendtm,
                         null::int AS exendy,
                         null::text AS exdur,
                         null::text AS drugrsp,
                         null::text AS drugrspcd
-                        from tas120_204."EXO" exo 
+                      select "EXOADJYN", "EXOENDAT", "EXOCYCEDT"  from tas120_204."EXO" exo 
  union all
  SELECT  distinct project ::text AS studyid,
                         'TAS120_204'::text AS studyname,
@@ -60,7 +61,8 @@ WITH included_subjects AS (
 						case when "EXOADJYN" = 'Yes' then "EXOSTDAT" else "EXOCYCSDT" end ::date AS exstdtc,
                         null::time AS exsttm,
                         null::int AS exstdy,
-                        "EXOENDAT"::date AS exendtc,
+                        --"EXOENDAT"::date AS exendtc,
+                        case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
                         null::time AS exendtm,
                         null::int AS exendy,
                         null::text AS exdur,
