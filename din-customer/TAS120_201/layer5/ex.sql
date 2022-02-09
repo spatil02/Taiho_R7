@@ -80,7 +80,7 @@ SELECT
         NULL::text	AS	exdosfrm,
         NULL::text	AS	exdosfrq,
         NULL::text	AS	exdostot,
-        "EXISTDAT"::text	AS	exstdtc,
+        "EXISTDAT"::date	AS	exstdtc,
         NULL::time without time zone	AS	exsttm,
         NULL::text	AS	exstdy,
         null::date AS exendtc,
