@@ -69,8 +69,12 @@ WITH included_sites AS (
 						tms.endmilestonecycletime_standard:: text as endmilestonecycletime
 					from TAS120_201_ctms.milestone_status_site sm
 					left join internal_config.taiho_ms_standards tms on upper(start_original_label) = upper(event_desc)
-					left join(  select min("EXOSTDAT")::date as Exosdat,"SiteNumber" from tas120_201."EXO"
- 					group by "SiteNumber")x
+					left join(  select min(Exosdat) as Exosdat,"SiteNumber" 
+									from(
+											select  case when lower("EXOADJYN")= 'yes' then "EXOSTDAT"
+														else "EXOCYCSDT"
+													end::date as Exosdat,"SiteNumber" from tas120_201."EXO" 
+										)r group by "SiteNumber")x
   					on concat('TAS120_201_',sm.site_number) = x."SiteNumber"
 					where tms.milestonelevel = 'Site'
 	

@@ -14,11 +14,17 @@ WITH included_studies AS (
    
   ),
    exo_FSI as (
-  				SELECT  	distinct	'TAS120_201'::text AS studyid,
-  							'1st Subject 1st Treatment'::text AS milestonelabel,
-                        	min("EXOSTDAT")::text AS FSI_Actual
-                from 		tas120_201."EXO"
-				group by 	1,2
+  				SELECT  	 studyid::text AS studyid,
+  							milestonelabel::text AS milestonelabel,
+                        	min(FSI_Actual)::text AS FSI_Actual
+                           from (	SELECT  	distinct 'TAS120_201'::text AS studyid,
+														 '1st Subject 1st Treatment'::text AS milestonelabel,
+														 case when lower("EXOADJYN")= 'yes' then "EXOSTDAT"
+															  else "EXOCYCSDT"
+														 end::text AS FSI_Actual
+									from tas120_201."EXO"
+								)fd 
+								group by 	1,2
   ),
 	
      studymilestone_data AS (
