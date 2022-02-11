@@ -37,7 +37,7 @@ WITH included_subjects AS (
                         null::text AS exdur,
                         null::text AS drugrsp,
                         null::text AS drugrspcd
-                      select "EXOADJYN", "EXOENDAT", "EXOCYCEDT"  from tas120_204."EXO" exo 
+				from tas120_204."EXO" exo 
  union all
  SELECT  distinct project ::text AS studyid,
                         'TAS120_204'::text AS studyname,
@@ -105,6 +105,10 @@ SELECT
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
 join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
+
+
+
+
 
 
 
