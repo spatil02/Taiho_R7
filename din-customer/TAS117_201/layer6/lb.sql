@@ -56,7 +56,8 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
 SELECT distinct nl.project ::text AS studyid,
                         concat(nl.project,substring(nl."SiteNumber",position('_' in nl."SiteNumber")))::text AS siteid,
                         nl."Subject" ::text AS usubjid,
-                        nl."FolderName" ::text AS visit,
+                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(nl."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation','')
+                        ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','') ::text AS visit,
                         case when nl."DataPageName" like '%Chemistry%'      then c."LBDAT"
                         	 when nl."DataPageName" like '%Hematology%'     then h."LBSDTC"
                         	 when nl."DataPageName" like '%Coagulation%'    then c2."LBDAT"
