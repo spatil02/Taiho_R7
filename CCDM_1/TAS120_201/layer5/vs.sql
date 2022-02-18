@@ -3,6 +3,7 @@ CCDM VS mapping
 Notes: Standard mapping to CCDM VS table
 */
 
+
 WITH included_subjects AS (
                 SELECT DISTINCT studyid, siteid, usubjid FROM subject),
 
@@ -55,7 +56,14 @@ null::text	AS	vspos	,
 null::text	AS	vsstat	,
 null::text	AS	vsloc	,
 null::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 null::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -79,7 +87,14 @@ null::text	AS	vspos	,
 null	::text	AS	vsstat	,
 null	::text	AS	vsloc	,
 null	::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 null	::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -104,7 +119,14 @@ null::text	AS	vspos	,
 null::text	AS	vsstat	,
 null::text	AS	vsloc	,
 null::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 null::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -128,7 +150,14 @@ null::text	AS	vspos	,
 null::text	AS	vsstat	,
 null::text	AS	vsloc	,
 null::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 null::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -152,7 +181,14 @@ null::text	AS	vspos	,
 null::text	AS	vsstat	,
 null::text	AS	vsloc	,
 null::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 null::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -176,7 +212,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -200,7 +243,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS"
@@ -224,7 +274,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -248,7 +305,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -272,7 +336,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -296,7 +367,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -320,7 +398,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -344,7 +429,14 @@ null::text	AS	vspos	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2"
@@ -368,7 +460,14 @@ NULL::numeric	AS	vsstresn	,
 NULL::text	AS	vsstat	,
 NULL::text	AS	vsloc	,
 NULL::text	AS	vsblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "VSDAT"::timestamp without time zone	AS	vsdtc	,
 NULL::time without time zone	AS	vstm
 FROM tas120_201."VS2" ) vs )
@@ -398,5 +497,7 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM vs_data vs
 JOIN included_subjects s ON (vs.studyid = s.studyid AND vs.siteid = s.siteid AND vs.usubjid = s.usubjid);
+
+
 
 

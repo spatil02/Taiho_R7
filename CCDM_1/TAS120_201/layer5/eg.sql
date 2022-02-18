@@ -49,10 +49,17 @@ WITH included_subjects AS (
 'NA'::text	AS	egstat	,
 'NA'::text	AS	egloc	,
 'NA'::text	AS	egblfl	,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "ECGDAT"::timestamp without time zone	AS	egdtc,	
 NULL::time without time zone	AS	egtm
- from tas120_201."ECG"
+from tas120_201."ECG"
 
 union all
 
@@ -73,7 +80,14 @@ SELECT
 'NA'::text AS egstat,
 'NA'::text AS egloc,
 'NA'::text AS egblfl,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "ECGDAT"::timestamp without time zone AS egdtc,
 NULL::time without time zone AS egtm
 from tas120_201."ECG"
@@ -97,7 +111,14 @@ SELECT
 'NA'::text AS egstat,
 'NA'::text AS egloc,
 'NA'::text AS egblfl,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "ECGDAT"::timestamp without time zone AS egdtc,
 NULL::time without time zone AS egtm
 from tas120_201."ECG"
@@ -121,7 +142,14 @@ SELECT
 'NA'::text AS egstat,
 'NA'::text AS egloc,
 'NA'::text AS egblfl,
-"FolderName"::text AS visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
 "ECGDAT"::timestamp without time zone AS egdtc,
 NULL::time without time zone AS egtm
 from tas120_201."ECG"
@@ -146,7 +174,14 @@ SELECT
 'NA'::text AS egstat,
 'NA'::text AS egloc,
 'NA'::text AS egblfl,
-REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 "ECGDAT"::timestamp without time zone AS egdtc,
 NULL::time without time zone AS egtm
 from tas120_201."ECG"
@@ -177,4 +212,8 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM eg_data eg
 JOIN included_subjects s ON (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid);
+
+
+
+
 

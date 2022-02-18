@@ -9,7 +9,14 @@ dm_data as(select 	distinct	dm."project"::text as studyid,
 					dm."SiteNumber"::text as siteid,
 					dm."Subject"::text as usubjid,
 					dm."FolderSeq"::numeric as visitnum,
-					dm."FolderName" :: text as visit,
+					trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(dm."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) :: text as visit,
 					COALESCE(dm."MinCreated", dm."RecordDate"):: date as dmdtc,
 					null:: date as brthdtc,
 					nullif(dm."DMAGE",'')::integer as age,
