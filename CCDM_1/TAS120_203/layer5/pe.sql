@@ -20,7 +20,14 @@ WITH included_subjects AS (
                         null::text AS peorresu,
                         null::text AS pestat,
                         null::text AS peloc,
-                        "FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         "PEDAT" ::timestamp without time zone AS pedtc,
                         null::time without time zone AS petm
                         from tas120_203."PE" p

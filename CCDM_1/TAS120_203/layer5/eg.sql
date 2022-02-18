@@ -23,7 +23,14 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("FolderName" ,'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         "ECGDAT" ::timestamp without time zone AS egdtc,
                         "ECGTM" ::time without time zone AS egtm
                         from tas120_203."ECG" e 
@@ -45,7 +52,14 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("FolderName" ,'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         "ECGDAT" ::timestamp without time zone AS egdtc,
                         "ECGTM" ::time without time zone AS egtm
                         from tas120_203."ECG" e 
@@ -68,7 +82,14 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("FolderName" ,'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         "ECGDAT" ::timestamp without time zone AS egdtc,
                         "ECGTM" ::time without time zone AS egtm
                         from tas120_203."ECG" e )

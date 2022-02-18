@@ -14,7 +14,14 @@ WITH included_subjects AS (
                         null::text AS sitecountry,
                         dm."Subject" ::text AS usubjid,
                         dm."FolderSeq" ::numeric AS visitnum,
-                        dm."FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+			                (REGEXP_REPLACE
+			                (REGEXP_REPLACE
+			                (REGEXP_REPLACE
+			               (dm."InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         coalesce (dm."MinCreated" ,dm."RecordDate") ::date AS dmdtc,
                         null::date AS brthdtc,
                         "DMAGE" ::integer AS age,
