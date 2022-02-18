@@ -47,7 +47,15 @@ SELECT  "project"::text AS studyid,
 "SiteNumber"::text AS siteid,
 "Subject"::text AS usubjid,
 "FolderSeq"::numeric AS visitnum,
-"InstanceName"::text AS visit,
+--"InstanceName"::text AS visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 null::int AS visitseq, /* defaulted to 1 - deprecated */
 min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc
@@ -60,7 +68,15 @@ SELECT  "project"::text AS studyid,
 "SiteNumber"::text AS siteid,
 "Subject"::text AS usubjid,
 "FolderSeq"::numeric AS visitnum,
-"InstanceName"::text AS visit,
+--"InstanceName"::text AS visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 null::int AS visitseq, /* defaulted to 1 - deprecated */
 min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc
@@ -73,7 +89,15 @@ SELECT  "project"::text AS studyid,
 "SiteNumber"::text AS siteid,
 "Subject"::text AS usubjid,
 "FolderSeq"::numeric AS visitnum,
-"InstanceName"::text AS visit,
+--"InstanceName"::text AS visit,
+trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 null::int AS visitseq, /* defaulted to 1 - deprecated */
 min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc

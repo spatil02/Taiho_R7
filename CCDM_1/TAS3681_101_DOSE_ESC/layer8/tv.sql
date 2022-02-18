@@ -18,23 +18,7 @@ tv_data AS (
 
 			select distinct  studyid,
 				   visitnum,
-				   trim(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(visit
-								,'<WK[0-9]D[0-9]/>\sExpansion','')
-								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'Expansion','')
-								
-				    ) as visit,
+				   visit,
 				   visitdy,
 				   visitwindowbefore,
 				   visitwindowafter

@@ -17,14 +17,7 @@ tv_scheduled AS (
 tv_data as(
 	 select studyid,
 		   	visitnum,
-			trim(REGEXP_REPLACE
-						(REGEXP_REPLACE
-						(REGEXP_REPLACE
-						(REGEXP_REPLACE
-						(visit,'\s\([0-9][0-9]\)','')
-									   ,'\s\([0-9]\)','')
-									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) as visit,
+			visit,
 			visitdy,
 			visitwindowafter,
 			visitwindowbefore from

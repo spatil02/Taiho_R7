@@ -16,7 +16,15 @@ WITH included_subjects AS (
                        -- (row_number() over (partition by "project","SiteNumber","Subject" order by  "EXOSTDAT","EXOENDAT"))::int AS exseq,
 					   /*(row_number() over (partition by [studyid],[siteid],[usubjid] order [exstdtc,exsttm]))::int AS exseq,*/
 					   concat("instanceId","RecordPosition")::int as exseq,
-                        "FolderName"::text AS visit,
+                        --"FolderName"::text AS visit,
+						trim(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							("InstanceName",'\s\([0-9][0-9]\)','')
+							 ,'\s\([0-9]\)','')
+							 ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+							 ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         'TAS120_202'::text AS extrt,
                         'Solid Tumors, Gastric or GEJ Cancers and Myeloid or Lymphoid Neoplasms'::text AS excat,
                         null::text AS exscat,

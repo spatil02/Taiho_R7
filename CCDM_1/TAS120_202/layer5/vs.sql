@@ -44,7 +44,15 @@ WITH included_subjects AS (
 								null::text AS vsstat,
 								null::text AS vsloc,
 								null::text AS vsblfl,
-								vs."FolderName"::text AS visit,
+								--vs."FolderName"::text AS visit,
+								trim(REGEXP_REPLACE
+									(REGEXP_REPLACE
+									(REGEXP_REPLACE
+									(REGEXP_REPLACE
+									(vs."InstanceName",'\s\([0-9][0-9]\)','')
+									,'\s\([0-9]\)','')
+									,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 								vs."VSDAT"::timestamp without time zone AS vsdtc,
 								null::time without time zone AS vstm
 							FROM "tas120_202"."VS" vs
