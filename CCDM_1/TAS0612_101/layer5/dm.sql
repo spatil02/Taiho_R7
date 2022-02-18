@@ -2,6 +2,8 @@
 CCDM DM mapping
 Notes: Standard mapping to CCDM DM table
 */
+
+
 with included_subjects as ( select 	distinct studyid, siteid, usubjid from subject ),
 	
 	included_site AS (
@@ -11,7 +13,14 @@ dm_dm2 as(select	dm."project"::text as studyid,
 					concat('TAS0612_101_',split_part(dm."SiteNumber",'_',2))::text as siteid,
 					dm."Subject"::text as usubjid,
 					dm."FolderSeq"::numeric as visitnum,
-					dm."FolderName" :: text as visit,
+					trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(dm."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) :: text as visit,
 					COALESCE(dm."MinCreated", dm."RecordDate"):: date as dmdtc,
 					dm."DMBRTDAT":: date as brthdtc,
 					dm."DMAGE"::integer as age,
@@ -46,4 +55,11 @@ SELECT
 FROM dm_dm2 dm
 JOIN included_subjects s ON (dm.studyid = s.studyid AND dm.siteid = s.siteid AND dm.usubjid = s.usubjid)
 JOIN included_site si ON (dm.studyid = si.studyid AND dm.siteid = si.siteid);
-		
+
+
+
+
+
+
+
+

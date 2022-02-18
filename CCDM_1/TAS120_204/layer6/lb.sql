@@ -58,8 +58,14 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
                     lb1."project"::text    AS studyid,
                     concat(concat('TAS120_204','_'),substring(lb1."SiteNumber",8,10))::text AS siteid,
                     lb1."Subject"::text    AS usubjid,
-                    REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(lb1."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation','')
-                        ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''):: text AS visit,
+           trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(lb1."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) :: text AS visit,
                     CASE
                         WHEN lb1."DataPageName" LIKE '%Chemistry%'
                         THEN MAX(chem."LBDAT")
@@ -185,7 +191,7 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
                     vs
                 -- EX mapping
                 UNION ALL
-                SELECT
+                select distinct
                     ex.studyid::text                        AS studyid,
                     ex.siteid::text                         AS siteid,
                     ex.usubjid::text                        AS usubjid,
@@ -366,7 +372,8 @@ FROM lb_data lb
 JOIN included_subjects s ON (lb.studyid = s.studyid AND lb.siteid = s.siteid AND lb.usubjid = s.usubjid)
 LEFT JOIN included_site si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
 
- 
+
+
 
 
 

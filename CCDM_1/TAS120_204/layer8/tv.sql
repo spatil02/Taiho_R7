@@ -17,6 +17,20 @@ tv_scheduled AS (
 				
 
 tv_data AS (
+select studyid,
+visitnum,
+trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(visit,'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) as visit,
+visitdy,
+visitwindowafter,
+visitwindowbefore
+from (
 	SELECT
 		'TAS120_204'::text AS studyid,
 		visitnum::numeric AS visitnum,
@@ -51,6 +65,7 @@ tv_data AS (
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
   
 	
+)a
 )
 
 SELECT 
@@ -67,5 +82,7 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM tv_data tv
 JOIN included_studies st ON (st.studyid = tv.studyid);
+
+
 
 

@@ -12,7 +12,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                         trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                         trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(v."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
@@ -25,7 +32,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(d."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
@@ -38,7 +52,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                       trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                       trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(d."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
@@ -51,7 +72,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(d."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISITDAT" ::date AS svstdtc,
@@ -64,7 +92,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                       trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                       trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(d."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         max("VISITDAT") ::date AS svstdtc,
@@ -77,7 +112,14 @@ SELECT  project ::text AS studyid,
                         concat(project,substring("SiteNumber",position('_' in "SiteNumber"))) ::text AS siteid,
                         "Subject" ::text AS usubjid, 
                         "FolderSeq" ::numeric AS visitnum,
-                        trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE( "InstanceName",'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(d."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))
                         ::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         "VISIT"::date AS svstdtc,
@@ -89,7 +131,14 @@ SELECT  project ::text AS studyid,
                                     fd.siteid,
                                     fd.usubjid,
                                     99::numeric AS visitnum,
-                                    trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(fd.visit,'<W[0-9]DA[0-9]/>\sExpansion',''),'\s\([0-9]\)',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation',''),' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) visit,
+     trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(fd.visit,'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svstdtc,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svendtc
                             FROM formdata fd
@@ -142,6 +191,13 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
-LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid)
-;
+LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
+
+
+
+
+
+
+
+
 

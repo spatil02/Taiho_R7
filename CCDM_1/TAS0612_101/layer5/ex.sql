@@ -1,8 +1,8 @@
-
 /*
 CCDM EX mapping
 Notes: Standard mapping to CCDM EX table
 */
+
 WITH included_subjects AS (
     SELECT DISTINCT studyid, siteid, usubjid FROM subject),
 
@@ -16,7 +16,14 @@ WITH included_subjects AS (
                 --row_number() over (partition by ex."studyid", ex."siteid", ex."Subject" ORDER BY ex."EXOSTDAT")::int AS exseq,
                 concat("instanceId","RecordPosition")::int AS exseq,
               /*REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,*/
-			    ex."FolderName":: text as visit,
+			    trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                 'TAS0612':: text AS extrt,
                 'Exposure':: text AS excat,
                 NULL:: text AS exscat,
@@ -75,4 +82,9 @@ SELECT
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
 join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
+
+
+
+
+
 

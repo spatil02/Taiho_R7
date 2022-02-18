@@ -12,7 +12,14 @@ WITH included_subjects AS (
 						concat('TAS0612_101_',split_part("SiteNumber",'_',2))::text AS siteid,
                         "Subject"::text AS usubjid, 
                         "FolderSeq"::numeric AS visitnum,
-                        trim("InstanceName")::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc
@@ -24,7 +31,14 @@ WITH included_subjects AS (
                                     --concat('TAS0612_101_',split_part(fd.siteid,'_',2))::text AS siteid,
                                     fd.usubjid,
                                     99::numeric AS visitnum, -- will be updated by cleanup script
-                                    trim(fd.visit) as visit,
+                                     trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(fd.visit,'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svstdtc,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svendtc
                             FROM formdata fd
@@ -77,4 +91,9 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid);
+
+
+
+
+
 

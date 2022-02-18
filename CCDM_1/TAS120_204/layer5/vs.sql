@@ -23,7 +23,14 @@ WITH included_subjects AS (
                     null::text AS vsstat,
                     null::text AS vsloc,
                     null::text AS vsblfl,
-                    "FolderName"::text AS visit,
+                    trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
                     "VSDAT"::timestamp without time zone AS vsdtc,
                     null::time without time zone AS vstm
                     from tas120_204."VS" v 
@@ -63,3 +70,8 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM vs_data vs
 JOIN included_subjects s ON (vs.studyid = s.studyid AND vs.siteid = s.siteid AND vs.usubjid = s.usubjid);
+
+
+
+
+

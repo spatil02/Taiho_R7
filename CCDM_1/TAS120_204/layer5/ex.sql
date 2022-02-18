@@ -16,7 +16,14 @@ WITH included_subjects AS (
                         --concat("instanceId","RecordPosition") ::int AS exseq, 
                         concat("RecordId","RecordPosition")::int as exseq,
                         /*(row_number() over (partition by [studyid],[siteid],[usubjid] order [exstdtc,exsttm]))::int AS exseq,*/
-                        "FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                         'Futibatinib'::text AS extrt,
                         'KRAS Gene Mutation'::text AS excat,
                         null::text AS exscat,
@@ -31,13 +38,13 @@ WITH included_subjects AS (
                         null::time AS exsttm,
                         null::int AS exstdy,
                         --"EXOENDAT" ::date AS exendtc,
-                        case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
+						case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
                         null::time AS exendtm,
                         null::int AS exendy,
                         null::text AS exdur,
                         null::text AS drugrsp,
                         null::text AS drugrspcd
-				from tas120_204."EXO" exo 
+                        from tas120_204."EXO" exo 
  union all
  SELECT  distinct project ::text AS studyid,
                         'TAS120_204'::text AS studyname,
@@ -47,7 +54,14 @@ WITH included_subjects AS (
                         "Subject" ::text AS usubjid,
                         concat("RecordId","RecordPosition")::int as exseq,
                        -- concat("instanceId","RecordPosition") ::int AS exseq, /*(row_number() over (partition by [studyid],[siteid],[usubjid] order [exstdtc,exsttm]))::int AS exseq,*/
-                        "FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                         'Binimetinib'::text AS extrt,
                         'KRAS Gene Mutation'::text AS excat,
                         null::text AS exscat,
@@ -57,12 +71,12 @@ WITH included_subjects AS (
                         null::text AS exdosfrm,
                         null::text AS exdosfrq,
                         null::numeric AS exdostot,
-                        --coalesce("EXOCYCSDT","EXOSTDAT")::date AS exstdtc,
-						case when "EXOADJYN" = 'Yes' then "EXOSTDAT" else "EXOCYCSDT" end ::date AS exstdtc,
+                       -- coalesce("EXOCYCSDT","EXOSTDAT")::date AS exstdtc,
+					   case when "EXOADJYN" = 'Yes' then "EXOSTDAT" else "EXOCYCSDT" end ::date AS exstdtc,
                         null::time AS exsttm,
                         null::int AS exstdy,
                         --"EXOENDAT"::date AS exendtc,
-                        case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
+						case when "EXOADJYN" = 'Yes' then "EXOENDAT" else "EXOCYCEDT" end ::date AS exendtc,
                         null::time AS exendtm,
                         null::int AS exendy,
                         null::text AS exdur,
@@ -105,8 +119,6 @@ SELECT
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
 join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
-
-
 
 
 
