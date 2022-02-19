@@ -2,34 +2,11 @@
 CCDM SV mapping
 Notes: Standard mapping to CCDM SV table
 */
-
 WITH included_subjects AS (
                 SELECT DISTINCT studyid, siteid, usubjid FROM subject ),
 
         sv_data AS (
-SELECT B.studyid, B.siteid, B.usubjid,max(B.visitnum)   as visitnum     ,trim(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(B.visit,'<WK[0-9]D[0-9]/>\sExpansion','')
-								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'Expansion','')
-								,'\s\([0-9][0-9]\)','')
-								,'\s\([0-9]\)','')
-								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-				    )	  AS      visit, B.visitseq, min(B.svstdtc) as      svstdtc, max(B.svendtc) as svendtc FROM        (
+SELECT B.studyid, B.siteid, B.usubjid,max(B.visitnum)   as visitnum     ,tRIM(B.visit)  AS      visit, B.visitseq, min(B.svstdtc) as      svstdtc, max(B.svendtc) as svendtc FROM        (
 SELECT studyid, siteid, usubjid, (case when cnt>1 OR visit like '%Escalation Cycle%' or visit like '%Cycle%' then (visitnum::int||'.'|| rnk+1)::numeric else visitnum end)::numeric AS visitnum, visit, visitseq, svstdtc, svendtc FROM
 (  
                                                                 SELECT  'TAS3681_101_DOSE_EXP'::text AS studyid,
@@ -198,29 +175,7 @@ group   by       B.studyid, B.siteid, B.usubjid, B.visit,B.visitseq
                                     fd.siteid,
                                     fd.usubjid,
                                     99::numeric AS visitnum, -- will be updated by cleanup script
-                                    trim(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(REGEXP_REPLACE
-					(fd.visit,'<WK[0-9]D[0-9]/>\sExpansion','')
-								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9]/>\sExpansion','')
-								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9]/>\sExpansion','')
-								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
-								,'Expansion','')
-								,'\s\([0-9][0-9]\)','')
-								,'\s\([0-9]\)','')
-								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-				    )	as visit,
+                                    fd.visit,
 									coalesce(datacollecteddate,dataentrydate)::date AS svstdtc,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svendtc
                             FROM formdata fd
@@ -277,7 +232,5 @@ SELECT
        /*KEY  ,(sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' ||  sv.visit )::text as objectuniquekey  KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
-JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
-;
-
+JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid);
 
