@@ -46,7 +46,15 @@ WITH included_subjects AS (
            null::text     AS egstat, 
            NULL::text         AS egloc, 
            NULL::text         AS egblfl, 
-           "FolderName"::text AS visit, 
+           --"FolderName"::text AS visit, 
+		   trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
            "ECGDAT"::timestamp without time zone AS egdtc, 
            null::time without time zone AS egtm   
 FROM       "tas120_202"."ECG" eg

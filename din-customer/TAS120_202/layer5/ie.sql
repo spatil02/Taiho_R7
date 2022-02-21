@@ -12,7 +12,15 @@ WITH included_subjects AS (
 					   "SiteNumber"::text AS siteid,
 					   "Subject"::text  AS usubjid,
 					   "FolderSeq"::numeric  AS visitnum,
-					   "FolderName"::text  AS visit,
+					   --"FolderName"::text  AS visit,
+					   trim(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							("InstanceName",'\s\([0-9][0-9]\)','')
+								,'\s\([0-9]\)','')
+								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
 					   COALESCE("MinCreated", "RecordDate")::date  AS iedtc,
 					   nullif("IECAT",'')::text  AS iecat,
 					   null::text AS iescat,

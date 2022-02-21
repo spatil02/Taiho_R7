@@ -25,7 +25,8 @@ WITH included_subjects AS (
                         "SiteNumber"::text AS siteid,
                         "Subject"::text AS usubjid,
                         "FolderSeq"::numeric AS visitnum,
-                        "FolderName"::text AS visit,
+                       -- "FolderName"::text AS visit,
+                        "InstanceName"::text AS visit,
                         max(COALESCE("MinCreated", "RecordDate"))::date AS iedtc,
                         null::int as ieseq,
 						max("IETESTCD")::text AS ietestcd,
@@ -56,4 +57,7 @@ SELECT
         /*KEY , (ie.studyid || '~' || ie.siteid || '~' || ie.usubjid || '~' || ie.ieseq)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM ie_data ie 
-JOIN included_subjects s ON (ie.studyid = s.studyid AND ie.siteid = s.siteid AND ie.usubjid = s.usubjid);
+JOIN included_subjects s ON (ie.studyid = s.studyid AND ie.siteid = s.siteid AND ie.usubjid = s.usubjid)
+ ;
+
+

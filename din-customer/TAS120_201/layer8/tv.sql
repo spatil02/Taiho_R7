@@ -14,7 +14,14 @@ tv_scheduled AS (
 	
 ),
 
-tv_data AS (
+tv_data as(
+	 select studyid,
+		   	visitnum,
+			visit,
+			visitdy,
+			visitwindowafter,
+			visitwindowbefore from
+	(
 	SELECT
 		'TAS120_201'::text AS studyid,
 		coalesce(visitnum,'99')::numeric AS visitnum,
@@ -49,6 +56,7 @@ tv_data AS (
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
   
 	
+)a
 )
 
 SELECT 
@@ -65,4 +73,6 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM tv_data tv
 JOIN included_studies st ON (st.studyid = tv.studyid);
+
+
 

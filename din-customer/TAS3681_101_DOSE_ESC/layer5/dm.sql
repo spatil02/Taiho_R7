@@ -2,6 +2,7 @@
 CCDM DM mapping
 Notes: Standard mapping to CCDM DM table
 */
+
 with included_subjects as ( select 	distinct studyid, siteid, usubjid from subject ),
 
 	
@@ -12,7 +13,23 @@ dm_dm2 as( select distinct 	a.studyid,
 					a.siteid,
 					a.usubjid,
 					a.visitnum,
-					a.visit,
+					trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(a.visit
+								,'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								
+				    ) as visit,
 					a.dmdtc,
 					a.brthdtc,
 					a.age,
@@ -27,7 +44,30 @@ dm_dm2 as( select distinct 	a.studyid,
 							 dm."SiteNumber"::text as siteid,
 							 dm."Subject"::text as usubjid,
 							 dm."FolderSeq"::numeric as visitnum,
-							 dm."FolderName" :: text as visit,
+							 --dm."FolderName" :: text as visit,
+							 trim(REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (dm."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation','')
+									   ,'<WK[0-9]D[0-9][0-9]/>\sEscalation','')
+									   ,'<WK[0-9]DA[0-9]/>\sEscalation','')
+									   ,'<WK[0-9]DA[0-9][0-9]/>\sEscalation','')
+									   ,'<W[0-9]DA[0-9]/>\sEscalation','')
+									   ,'<W[0-9]DA[0-9][0-9]/>\sEscalation','')
+									   ,' Escalation','')
+									   ,'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								 ) :: text as visit,
 							 COALESCE(dm."MinCreated", dm."RecordDate"):: date as dmdtc,
 							 dm."DMBRTDAT":: date as brthdtc,
 							 dm."DMAGE"::integer as age,
@@ -51,7 +91,30 @@ dm_dm2 as( select distinct 	a.studyid,
 							 dm2."SiteNumber"::text as siteid,
 							 dm2."Subject"::text as usubjid,
 							 dm2."FolderSeq"::numeric as visitnum,
-							 dm2."FolderName" :: text as visit,
+							 --dm2."FolderName" :: text as visit,
+							 trim(REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (REGEXP_REPLACE
+								 (dm2."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation','')
+									   ,'<WK[0-9]D[0-9][0-9]/>\sEscalation','')
+									   ,'<WK[0-9]DA[0-9]/>\sEscalation','')
+									   ,'<WK[0-9]DA[0-9][0-9]/>\sEscalation','')
+									   ,'<W[0-9]DA[0-9]/>\sEscalation','')
+									   ,'<W[0-9]DA[0-9][0-9]/>\sEscalation','')
+									   ,' Escalation','')
+									   ,'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								 ) :: text as visit,
 							 COALESCE(dm2."MinCreated", dm2."RecordDate"):: date as dmdtc,
 							 dm2."DMBRTDAT":: date as brthdtc,
 							 dm2."DMAGE"::integer as age,
@@ -93,5 +156,7 @@ select
 	/*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 from
 	dm_dm2 dm join included_subjects s on (dm.studyid = s.studyid and dm.siteid = s.siteid and dm.usubjid = s.usubjid)
-	JOIN included_sites si ON (dm.studyid = si.studyid AND dm.siteid = si.siteid);
+	JOIN included_sites si ON (dm.studyid = si.studyid AND dm.siteid = si.siteid)
+;
 		
+

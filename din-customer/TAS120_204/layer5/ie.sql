@@ -13,7 +13,14 @@ WITH included_subjects AS (
                         "Subject"::text AS usubjid,
                          row_number() OVER (PARTITION BY ie.studyid, ie.siteid, ie."Subject" ORDER BY ie."serial_id")::int as ieseq,
                         "FolderSeq"::numeric AS visitnum,
-                        "FolderName"::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
                         COALESCE("MinCreated","RecordDate")::date AS iedtc,
                         nullif("IETESTCD",'')::text AS ietestcd,
                         nullif("IETESTCD",'')::text AS ietest,
@@ -38,5 +45,6 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM ie_data ie 
 JOIN included_subjects s ON (ie.studyid = s.studyid AND ie.siteid = s.siteid AND ie.usubjid = s.usubjid);
+
 
 

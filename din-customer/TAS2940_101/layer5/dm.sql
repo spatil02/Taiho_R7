@@ -14,7 +14,8 @@ WITH included_subjects AS (
                         null::text AS sitecountry,
                         dm."Subject" ::text AS usubjid,
                         dm."FolderSeq" ::numeric AS visitnum,
-                        dm."FolderName" ::text AS visit,
+                        --dm."FolderName" ::text AS visit,
+                        trim(dm."InstanceName") ::text AS visit,
                         coalesce (dm."MinCreated" ,dm."RecordDate") ::date AS dmdtc,
                         null::date AS brthdtc,
                         "DMAGE" ::integer AS age,
@@ -53,7 +54,8 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM dm_data dm
 JOIN included_subjects s ON (dm.studyid = s.studyid AND dm.siteid = s.siteid AND dm.usubjid = s.usubjid)
-join site_data sd on (dm.studyid = sd.studyid AND dm.siteid = sd.siteid);
+join site_data sd on (dm.studyid = sd.studyid AND dm.siteid = sd.siteid)
+;
 
 
 

@@ -52,7 +52,30 @@ WITH included_subjects AS (
                     null::text AS vsstat,
                     null::text AS vsloc,
                     null::text AS vsblfl,
-                    REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                    --REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                    trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					("InstanceName",'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								,'\s\([0-9][0-9]\)','')
+								,'\s\([0-9]\)','')
+								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				    )	:: text as visit,
                     vs."VSDAT"::timestamp without time zone AS vsdtc,
                     null::time without time zone AS vstm
                 FROM tas3681_101."VS" vs
@@ -87,7 +110,30 @@ WITH included_subjects AS (
                     null::text AS vsstat,
                     null::text AS vsloc,
                     null::text AS vsblfl,
-                    vsb."FolderName"::text AS visit,
+                    --vsb."FolderName"::text AS visit,
+                    trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					("InstanceName",'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								,'\s\([0-9][0-9]\)','')
+								,'\s\([0-9]\)','')
+								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				    )::text AS visit,
                     vsb."VSDAT"::timestamp without time zone AS vsdtc,
                     null::time without time zone AS vstm
                 FROM tas3681_101."VSB" vsb
@@ -153,5 +199,5 @@ SELECT
         /*KEY , (vs.studyid || '~' || vs.siteid || '~' || vs.usubjid || '~' || vs.vsseq)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM all_data vs
-JOIN included_subjects s ON (vs.studyid = s.studyid AND vs.siteid = s.siteid AND vs.usubjid = s.usubjid);
-
+JOIN included_subjects s ON (vs.studyid = s.studyid AND vs.siteid = s.siteid AND vs.usubjid = s.usubjid)
+;

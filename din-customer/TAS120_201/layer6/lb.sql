@@ -16,7 +16,14 @@ WITH included_subjects AS (
                 lb.studyid,
                 lb.siteid,
                 lb.usubjid,
-                trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REPLACE(visit,'(1)',''),'<W[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''))::text as visit,
+                trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(visit,'\s\([0-9][0-9]\)','')
+								   ,'\s\([0-9]\)','')
+								   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text as visit,
                 lbdtc,
                 extract (days from (lbdtc-dsstdtc)::interval)::numeric as lbdy,
                 (row_number() over (partition by lb.studyid, lb.siteid, lb.usubjid order by lb.lbtestcd, lb.lbdtc))::int as lbseq,
@@ -55,7 +62,14 @@ from (
                         lb1."project"::text AS studyid,
                         lb1."SiteNumber"::text AS siteid, 
                         lb1."Subject"::text    AS usubjid,
-                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(lb1."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(lb1."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
                         CASE
                                 WHEN lb1."DataPageName" like '%Chemistry%' THEN max(chem."LBDAT")
                                 WHEN lb1."DataPageName" like '%Hematology%' THEN max(hem."LBDAT")
@@ -324,4 +338,6 @@ SELECT
 FROM lb_data lb
 JOIN included_subjects s ON (lb.studyid = s.studyid AND lb.siteid = s.siteid AND lb.usubjid = s.usubjid)
 LEFT JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
+
+
 

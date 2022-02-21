@@ -14,7 +14,29 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
 	    select studyid,
 		        siteid,
 				usubjid,				
-				visit,
+				trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(visit,'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								,'\s\([0-9][0-9]\)','')
+								,'\s\([0-9]\)','')
+								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				    )	as visit,
 				extrt,
 				excat,
 				exscat,
@@ -121,5 +143,6 @@ SELECT
       /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
-JOIN included_sites si ON (ex.studyid = si.studyid AND ex.siteid = si.siteid);
+JOIN included_sites si ON (ex.studyid = si.studyid AND ex.siteid = si.siteid)
+;
 

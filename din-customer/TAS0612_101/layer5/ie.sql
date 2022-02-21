@@ -11,7 +11,14 @@ WITH included_subjects AS (
                         concat(concat("project",'_'),split_part("SiteNumber",'_',2))::text AS siteid,
                         "Subject"::text AS usubjid,
                         "FolderSeq"::numeric AS visitnum,
-                        "FolderName"::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						("InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
                         max(COALESCE("MinCreated", "RecordDate"))::date AS iedtc,
                         row_number() OVER (PARTITION BY "project","SiteNumber","Subject" ORDER BY "serial_id")::int AS ieseq,
 						max("IETESTCD")::text AS ietestcd,
@@ -22,7 +29,7 @@ WITH included_subjects AS (
                         nullif("IECAT",'')::text AS iecat,
                         null::text AS iescat
                 from tas0612_101."IE"	ie	
-				group by "project","SiteNumber","Subject","FolderSeq","FolderName","serial_id",iecat,iescat
+				group by "project","SiteNumber","Subject","FolderSeq","InstanceName","serial_id",iecat,iescat
 				)
 
 SELECT 
@@ -42,4 +49,7 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM ie_data ie 
 JOIN included_subjects s ON (ie.studyid = s.studyid AND ie.siteid = s.siteid AND ie.usubjid = s.usubjid);
+
+
+
 

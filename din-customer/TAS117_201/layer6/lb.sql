@@ -56,8 +56,14 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
 SELECT distinct nl.project ::text AS studyid,
                         concat(nl.project,substring(nl."SiteNumber",position('_' in nl."SiteNumber")))::text AS siteid,
                         nl."Subject" ::text AS usubjid,
-                        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(nl."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation','')
-                        ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','') ::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(nl."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                         case when nl."DataPageName" like '%Chemistry%'      then c."LBDAT"
                         	 when nl."DataPageName" like '%Hematology%'     then h."LBSDTC"
                         	 when nl."DataPageName" like '%Coagulation%'    then c2."LBDAT"
@@ -95,7 +101,7 @@ SELECT distinct nl.project ::text AS studyid,
                         null::text AS  lbstint,
                         null::numeric AS  lbuloq,
                         null::text AS  lbclsig
-                        from tas117_201_lab."NormLab" nl
+                       from tas117_201_lab."NormLab" nl 
                         left join tas117_201."HEMA" h on (nl.project = h.project and nl."Subject" = h."Subject" and nl."SiteNumber" = h."SiteNumber" and nl."InstanceName"=h."InstanceName")
                         left join tas117_201."CHEM" c on (nl.project = c.project and nl."Subject" = c."Subject" and nl."SiteNumber" = c."SiteNumber" and nl."InstanceName"=c."InstanceName")
                         left join tas117_201."COAG" c2 on (nl.project = c2.project and nl."Subject" = c2."Subject" and nl."SiteNumber" = c2."SiteNumber" and nl."InstanceName"=c2."InstanceName")
@@ -321,4 +327,7 @@ SELECT distinct nl.project ::text AS studyid,
 FROM lb_data lb
 JOIN included_subjects s ON (lb.studyid = s.studyid AND lb.siteid = s.siteid AND lb.usubjid = s.usubjid)
 LEFT JOIN included_site si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
+
+
+
 

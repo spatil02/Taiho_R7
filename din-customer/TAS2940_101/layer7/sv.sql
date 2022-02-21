@@ -22,7 +22,16 @@ sv.svendtc from(
                         concat(concat('TAS2940_101','_'),substring("SiteNumber",9,11))::text AS siteid,
                         "Subject"::text AS usubjid, 
                         "FolderSeq"::numeric AS visitnum,
-                        "InstanceName"::text AS visit,
+                        --"InstanceName"::text AS visit,
+                        trim(REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 ("InstanceName",'\s\([0-9][0-9]\)','')
+												 ,'\s\([0-9]\)','')
+												 ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+												 ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									 ) as visit,
                         1::int AS visitseq, /* defaulted to 1 - deprecated */
                         min("VISITDAT")::date AS svstdtc,
                         max("VISITDAT")::date AS svendtc from TAS2940_101."VISIT"
@@ -32,7 +41,16 @@ sv.svendtc from(
                                     fd.siteid,
                                     fd.usubjid,
                                     99::numeric AS visitnum,
-                                    fd.visit,
+                                    --fd.visit,
+                                    trim(REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 (REGEXP_REPLACE
+									 (fd.visit,'\s\([0-9][0-9]\)','')
+												 ,'\s\([0-9]\)','')
+												 ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+												 ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									 ) as visit,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svstdtc,
                                     coalesce(datacollecteddate,dataentrydate)::date AS svendtc
                             FROM formdata fd
@@ -40,32 +58,48 @@ sv.svendtc from(
                             WHERE sd.studyid IS NULL AND fd.studyid='TAS2940_101'),
                                  
                         all_visits AS (
-                        SELECT studyid,
-                        		studyname,
+                        select studyid,
+                        	   studyname,
+                               siteid,
+                               usubjid,
+                               visitnum,
+                               visit, 
+                               case when rnk = '2' then 1.5 else visitseq end as visitseq,
+                               svstdtc,
+                               svendtc from(
+                        			select	studyid,
+                        	   				studyname,
+                                			siteid,
+                                			usubjid,
+                                			visitnum,
+                                			visit, 
+                                			visitseq,
+                                			svstdtc,
+                                			svendtc,
+                        					rank () over (partition by studyid,siteid,usubjid,visit order by visitnum) as rnk
+                        from(SELECT studyid,
+                        	   studyname,
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                 trim--(REGEXP_REPLACE
-                                 (REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(visit,'<W[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation','')--,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-                                 ) as visit, 
+                                  visit, 
                                  visitseq,
                                 svstdtc,
                                 svendtc
                         FROM sv_data
                         UNION ALL
                         SELECT studyid,
-                        	   'TAS2940_101' as studyname,
+                        		'TAS120_204' as studyname,
                                 siteid,
                                 usubjid,
                                 visitnum,
-                                 trim--(REGEXP_REPLACE
-                                 (REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(visit,'<W[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''), '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'Escalation','')--,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
-                                 ) as visit, 
-                                1 visitseq,
+                                 visit, 
+                                1 as visitseq,
                                 min(svstdtc) as svstdtc,
                                 max(svendtc) as svendtc
                         FROM fd_visit
-                        group by 1,2,3,4,5,6
+                        group by 1,2,3,4,5,6) a)b 
+                        --where rnk =1
                         ),
 
      included_sites AS (
@@ -83,13 +117,12 @@ SELECT distinct
         sv.usubjid::text AS usubjid, 
         sv.visitnum::numeric AS visitnum,
         sv.visit::text AS visit,
-        sv.visitseq::int AS visitseq,
+        sv.visitseq::numeric AS visitseq,
         sv.svstdtc::date AS svstdtc,
         sv.svendtc::date AS svendtc
          /*KEY , (sv.studyid || '~' || sv.siteid || '~' || sv.usubjid || '~' || sv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM all_visits sv
 JOIN included_subjects s ON (sv.studyid = s.studyid AND sv.siteid = s.siteid AND sv.usubjid = s.usubjid)
-LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid)
-;
+LEFT JOIN included_sites si ON (sv.studyid = si.studyid AND sv.siteid = si.siteid);
 

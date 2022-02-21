@@ -20,7 +20,16 @@ WITH included_subjects AS (
                         null::text AS peorresu,
                         null::text AS pestat,
                         null::text AS peloc,
-                        "FolderName" ::text AS visit,
+                        --"FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							("InstanceName",'\s\([0-9][0-9]\)','')
+										,'\s\([0-9]\)','')
+										,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+										,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+							) ::text AS visit,
                         "PEDAT" ::timestamp without time zone AS pedtc,
                         null::time without time zone AS petm
                         from TAS2940_101."PE" pe
@@ -47,6 +56,7 @@ SELECT
          /*KEY, (pe.studyid || '~' || pe.siteid || '~' || pe.usubjid || '~' || peseq)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM pe_data pe
-JOIN included_subjects s ON (pe.studyid = s.studyid AND pe.siteid = s.siteid AND pe.usubjid = s.usubjid);
+JOIN included_subjects s ON (pe.studyid = s.studyid AND pe.siteid = s.siteid AND pe.usubjid = s.usubjid)
+;
 
 

@@ -24,7 +24,16 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        "FolderName" ::text AS visit,
+                       -- "InstanceName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							("InstanceName",'\s\([0-9][0-9]\)','')
+										,'\s\([0-9]\)','')
+										,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+										,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+							)	::text AS visit,
                         "ECGDAT" ::timestamp without time zone AS egdtc,
                         "ECGTM" ::time without time zone AS egtm
                         from TAS2940_101."ECG1" e 
@@ -55,5 +64,7 @@ SELECT
         /*KEY, (eg.studyid || '~' || eg.siteid || '~' || eg.usubjid || '~' || eg.egseq)::text  AS objectuniquekey KEY*/  
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM eg_data eg
-JOIN included_subjects s ON (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid);
+JOIN included_subjects s ON (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid)
+;
+
 

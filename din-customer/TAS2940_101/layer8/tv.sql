@@ -17,6 +17,13 @@ tv_scheduled AS (
 				
 
 tv_data AS (
+			select studyid,
+				   visitnum,
+				   visit,
+				   visitdy,
+				   visitwindowbefore,
+				   visitwindowafter
+			from(	   
 	SELECT
 		'TAS2940_101'::text AS studyid,
 		visitnum::numeric AS visitnum,
@@ -50,7 +57,7 @@ tv_data AS (
 	WHERE (studyid, visit) NOT IN (SELECT DISTINCT studyid, visit FROM sv) 
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
   
-	
+			)o
 )
 
 SELECT 
@@ -66,7 +73,8 @@ SELECT
         /*KEY , (tv.studyid || '~' || tv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM tv_data tv
-JOIN included_studies st ON (st.studyid = tv.studyid);
+JOIN included_studies st ON (st.studyid = tv.studyid)
+;
 
 
 

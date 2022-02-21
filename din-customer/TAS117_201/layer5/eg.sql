@@ -23,7 +23,14 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        "FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(e."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                         "ECGDAT" ::timestamp without time zone AS egdtc,
                         null::time without time zone AS egtm
                         from tas117_201."ECG" e 
@@ -55,7 +62,14 @@ WITH included_subjects AS (
                         null::text AS egstat,
                         null::text AS egloc,
                         null::text AS egblfl,
-                        "FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(REGEXP_REPLACE
+						(e."InstanceName",'\s\([0-9][0-9]\)','')
+									   ,'\s\([0-9]\)','')
+									   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+									   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')) ::text AS visit,
                         "ECGCDAT" ::timestamp without time zone AS egdtc,
                         null::time without time zone AS egtm
                         from tas117_201."ECGCD" e 
@@ -94,4 +108,11 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM eg_data eg
 JOIN included_subjects s ON (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid);
+
+
+
+
+
+
+
 

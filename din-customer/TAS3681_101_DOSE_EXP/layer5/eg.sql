@@ -25,7 +25,29 @@ WITH included_subjects AS (
                   eg.egstat,
                   eg.egloc,
  eg.egblfl,
-                  eg.visit,
+                  trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(eg.visit,'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								,'\s\([0-9][0-9]\)','')
+								,'\s\([0-9]\)','')
+								,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+								,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				    ) as	visit,
                   eg.egdtc,
                   eg.egtm
          FROM     (          -- TAS3681-101  ECG
@@ -495,4 +517,7 @@ SELECT
        /*KEY , now()::timestamp without time zone AS comprehend_update_time KEY*/
 FROM   eg_data eg
 JOIN   included_subjects s
-ON     (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid);
+ON     (eg.studyid = s.studyid AND eg.siteid = s.siteid AND eg.usubjid = s.usubjid)
+;
+
+

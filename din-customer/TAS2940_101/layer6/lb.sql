@@ -57,7 +57,16 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
                     concat(concat('TAS2940_101','_'),substring(lb1."SiteNumber",9,11))::text AS siteid,
                     lb1."Subject"::text    AS usubjid,
                     --lb1."FolderName":: text AS visit,
-					REGEXP_REPLACE(lb1."InstanceName",' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','') :: text AS visit,
+					--REGEXP_REPLACE(lb1."InstanceName",' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','') :: text AS visit,
+					trim(REGEXP_REPLACE
+	(REGEXP_REPLACE
+	(REGEXP_REPLACE
+	(REGEXP_REPLACE
+	(lb1."InstanceName",'\s\([0-9][0-9]\)','')
+				   ,'\s\([0-9]\)','')
+				   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+	) :: text AS visit,
                     CASE
                         WHEN lb1."DataPageName" LIKE '%Chemistry%'
                         THEN MAX(chem."LBDAT")
@@ -357,7 +366,8 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM lb_data lb
 JOIN included_subjects s ON (lb.studyid = s.studyid AND lb.siteid = s.siteid AND lb.usubjid = s.usubjid)
-LEFT JOIN included_site si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
+LEFT JOIN included_site si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid)
+;
 
 
 

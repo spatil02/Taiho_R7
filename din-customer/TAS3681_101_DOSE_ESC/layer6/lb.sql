@@ -2,6 +2,7 @@
 CCDM LB mapping
 Notes: Standard mapping to CCDM LB table
 */
+
 WITH
     included_subjects AS
     (
@@ -24,9 +25,32 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
             'TAS3681_101_DOSE_ESC'::text    AS studyid,
             lb1."SiteNumber"::text AS siteid,
             lb1."Subject"::text    AS usubjid,
-            REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(lb1."InstanceName",
-            '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation'
-            ,''):: text AS visit,
+           -- REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(lb1."InstanceName",
+           -- '<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation'
+            --,''):: text AS visit,
+            trim(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(REGEXP_REPLACE
+				(lb1."InstanceName",'<WK[0-9]D[0-9]/>\sEscalation','')
+							,'<WK[0-9]D[0-9][0-9]/>\sEscalation','')
+							,'<WK[0-9]DA[0-9]/>\sEscalation','')
+							,'<WK[0-9]DA[0-9][0-9]/>\sEscalation','')
+							,'<W[0-9]DA[0-9]/>\sEscalation','')
+							,'<W[0-9]DA[0-9][0-9]/>\sEscalation','')
+							,' Escalation','')
+							,'\s\([0-9][0-9]\)','')
+							,'\s\([0-9]\)','')
+							,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+							,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+				):: text AS visit,
             CASE
                 WHEN lb1."DataPageName" LIKE '%Chemistry%'
                 THEN MAX(chem."LBDAT")
@@ -128,11 +152,23 @@ SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregi
             lb.studyid,
             lb.siteid,
             lb.usubjid,
-            trim(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE
-            (REGEXP_REPLACE(REGEXP_REPLACE(REPLACE(REPLACE(visit,'(1)',''),'  Cycle',' Cycle'),'<W[0-9]DA[0-9]/>\sExpansion',''
-            ),'<WK[0-9]DA[0-9]/>\sExpansion',''),'<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),
-            '<W[0-9]DA[0-9][0-9]/>\sExpansion',''), '<WK[0-9]D[0-9]/>\sEscalation',''),
-            '<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''))::text AS visit,
+            trim(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(REGEXP_REPLACE
+					(visit
+								,'<WK[0-9]D[0-9]/>\sExpansion','')
+								,'<WK[0-9]D[0-9][0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9]/>\sExpansion','')
+								,'<WK[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9]/>\sExpansion','')
+								,'<W[0-9]DA[0-9][0-9]/>\sExpansion','')
+								,'Expansion','')
+								
+				    )::text AS visit,
             lbdtc,
             extract (days from (lbdtc-dsstdtc)::interval)::numeric as lbdy,
             lbseq,
@@ -435,5 +471,7 @@ ON
         lb.studyid = s.studyid
     AND lb.siteid = s.siteid
     AND lb.usubjid = s.usubjid)
-	JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
+	JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid)
+;
+
 

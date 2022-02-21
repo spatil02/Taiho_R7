@@ -12,7 +12,14 @@ ie_data AS
     "SiteNumber"::text AS siteid,
     "Subject"::text AS usubjid,
     "FolderSeq"::numeric AS visitnum,
-    "FolderName"::text AS visit,
+    trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''))::text AS visit,
     coalesce("RecordDate","MinCreated")::date AS iedtc,
     row_number() OVER (PARTITION BY 'TAS120_201',"SiteNumber","Subject" ORDER BY serial_id)::integer AS ieseq,
     "IETESTCD"::text AS ietestcd,

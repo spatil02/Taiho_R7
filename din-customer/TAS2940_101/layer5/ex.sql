@@ -16,7 +16,16 @@ WITH included_subjects AS (
                         --concat("instanceId","RecordPosition") ::int AS exseq, 
                         concat("RecordId","RecordPosition")::int as exseq,
                         /*(row_number() over (partition by [studyid],[siteid],[usubjid] order [exstdtc,exsttm]))::int AS exseq,*/
-                        "FolderName" ::text AS visit,
+                        --"FolderName" ::text AS visit,
+                        trim(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							(REGEXP_REPLACE
+							("InstanceName",'\s\([0-9][0-9]\)','')
+										,'\s\([0-9]\)','')
+										,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+										,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+							) ::text AS visit,
                         'TAS2940'::text AS extrt,
                         'Locally Advanced or Metastatic Solid Tumor Cancer'::text AS excat,
                         null::text AS exscat,
@@ -73,7 +82,8 @@ SELECT
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM ex_data ex
 JOIN included_subjects s ON (ex.studyid = s.studyid AND ex.siteid = s.siteid AND ex.usubjid = s.usubjid)
-join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid);
+join site_data sd on (ex.studyid = sd.studyid AND ex.siteid = sd.siteid)
+;
 
 
 

@@ -42,8 +42,15 @@ SELECT
         "Subject"::text	AS	usubjid,
         concat("RecordId","RecordPosition")::INT  AS exseq,
         "project"::text	AS	studyid,
-        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
-        'TAS120-201'::text	AS	extrt,
+        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
+		'TAS120-201'::text	AS	extrt,
         'Metastatic Breast Cancer'::text	AS	excat,
         NULL::text	AS	exscat,
         "EXOSDOSE"::numeric	AS	exdose,
@@ -68,9 +75,16 @@ SELECT
         SELECT 
         "SiteNumber"::text	AS	siteid,
         "Subject"::text	AS	usubjid,
-       concat("RecordId","RecordPosition")::INT  AS exseq,
+       	concat("RecordId","RecordPosition")::INT  AS exseq,
         "project"::text	AS	studyid,
-        REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE("InstanceName",'<WK[0-9]D[0-9]/>\sEscalation',''),'<WK[0-9]D[0-9][0-9]/>\sEscalation',''),'Escalation',''):: text as visit,
+        trim(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			(REGEXP_REPLACE
+			("InstanceName",'\s\([0-9][0-9]\)','')
+						   ,'\s\([0-9]\)','')
+						   ,' [0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')
+						   ,' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]','')):: text as visit,
         'Fulvestrant'::text	AS	extrt,
         'Metastatic Breast Cancer'::text	AS	excat,
         NULL::text	AS	exscat,
