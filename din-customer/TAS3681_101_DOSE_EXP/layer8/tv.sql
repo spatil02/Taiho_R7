@@ -21,8 +21,12 @@ tv_data AS (
 				   visitdy,
 				   visitwindowbefore,
 				   visitwindowafter
-				   ,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
-			from(	
+				   ,case when ((lower(visit) like '%day 1' OR lower(visit) like 'day 1 %' 
+OR lower(visit) like '% day 1 %' OR lower(visit) like '% day 1<%') or (lower(visit) like '%day 01' OR lower(visit) like 'day 01 %' 
+OR lower(visit) like '% day 01 %' OR lower(visit) like '% day 01<%') or (lower(visit) like '%day 1-%') or (lower(visit) like '%day 01-%')) then 'True' else null end as isbaselinevisit
+
+			from(	   
+
 	select distinct
 		'TAS3681_101_DOSE_EXP'::text AS studyid,
 		visitnum::numeric AS visitnum,
@@ -55,7 +59,8 @@ tv_data AS (
 	FROM formdata 
 	WHERE (studyid, visit) NOT IN (SELECT DISTINCT studyid, visit FROM sv) 
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
-)r
+  
+	)r
 )
 
 SELECT

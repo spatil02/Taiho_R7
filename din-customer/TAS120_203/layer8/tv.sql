@@ -17,6 +17,17 @@ tv_scheduled AS (
 				
 
 tv_data AS (
+
+select studyid,
+visitnum,
+visit,
+visitdy,
+visitwindowafter,
+visitwindowbefore
+,case when ((lower(visit) like '%day 1' OR lower(visit) like 'day 1 %' 
+OR lower(visit) like '% day 1 %' OR lower(visit) like '% day 1<%') or (lower(visit) like '%day 01' OR lower(visit) like 'day 01 %' 
+OR lower(visit) like '% day 01 %' OR lower(visit) like '% day 01<%') or (lower(visit) like '%day 1-%') or (lower(visit) like '%day 01-%')) then 'True' else null end as isbaselinevisit
+from (				
 	SELECT
 		'TAS120_203'::text AS studyid,
 		visitnum::numeric AS visitnum,
@@ -24,7 +35,6 @@ tv_data AS (
 		visitdy::int AS visitdy,
 		visitwindowbefore::int AS visitwindowbefore,
 		visitwindowafter::int AS visitwindowafter
-		,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
 	FROM tv_scheduled tvs
 
 	UNION ALL
@@ -36,7 +46,6 @@ tv_data AS (
 		99999::int AS visitdy,
 		0::int AS visitwindowbefore,
 		0::int AS visitwindowafter
-		,case when sv."visit" like '%Day 1' then 'True' else null end as isbaselinevisit
 	FROM sv 
 	WHERE (studyid, visit) NOT IN (SELECT DISTINCT studyid, visit FROM tv_scheduled)
 
@@ -48,11 +57,10 @@ tv_data AS (
 		'99999'::int AS visitdy,
 		0::int AS visitwindowbefore,
 		0::int AS visitwindowafter
-		,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
 	FROM formdata 
 	WHERE (studyid, visit) NOT IN (SELECT DISTINCT studyid, visit FROM sv) 
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
-  
+  )p
 	
 )
 

@@ -20,8 +20,10 @@ tv_data as(
 			visit,
 			visitdy,
 			visitwindowafter,
-			visitwindowbefore 
-			,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
+			visitwindowbefore
+			,case when ((lower(visit) like '%day 1' OR lower(visit) like 'day 1 %' 
+OR lower(visit) like '% day 1 %' OR lower(visit) like '% day 1<%') or (lower(visit) like '%day 01' OR lower(visit) like 'day 01 %' 
+OR lower(visit) like '% day 01 %' OR lower(visit) like '% day 01<%') or (lower(visit) like '%day 1-%') or (lower(visit) like '%day 01-%')) then 'True' else null end as isbaselinevisit
 			from
 	(
 	SELECT
