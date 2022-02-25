@@ -23,6 +23,7 @@ visit,
 visitdy,
 visitwindowafter,
 visitwindowbefore
+,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
 from (
 
 	SELECT
@@ -70,7 +71,7 @@ SELECT
         tv.visitdy::int AS visitdy,
         tv.visitwindowbefore::int AS visitwindowbefore,
         tv.visitwindowafter::int AS visitwindowafter,
-        null::boolean AS isbaselinevisit,
+        tv.isbaselinevisit::boolean AS isbaselinevisit,
 		'True'::boolean as isvisible
         /*KEY , (tv.studyid || '~' || tv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/

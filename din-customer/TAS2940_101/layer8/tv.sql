@@ -23,6 +23,7 @@ tv_data AS (
 				   visitdy,
 				   visitwindowbefore,
 				   visitwindowafter
+				   ,case when visit like '%Day 1' then 'True' else null end as isbaselinevisit
 			from(	   
 	SELECT
 		'TAS2940_101'::text AS studyid,
@@ -56,8 +57,7 @@ tv_data AS (
 	FROM formdata 
 	WHERE (studyid, visit) NOT IN (SELECT DISTINCT studyid, visit FROM sv) 
 	AND (studyid, visit) NOT IN (SELECT studyid, visit FROM tv_scheduled)
-  
-			)o
+)o
 )
 
 SELECT 
@@ -68,7 +68,7 @@ SELECT
         tv.visitdy::int AS visitdy,
         tv.visitwindowbefore::int AS visitwindowbefore,
         tv.visitwindowafter::int AS visitwindowafter,
-        null::boolean AS isbaselinevisit,
+        tv.isbaselinevisit::boolean AS isbaselinevisit,
 		'True'::boolean as isvisible
         /*KEY , (tv.studyid || '~' || tv.visit)::text  AS objectuniquekey KEY*/
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
