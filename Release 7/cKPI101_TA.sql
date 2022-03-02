@@ -7,6 +7,7 @@ CREATE SCHEMA IF NOT EXISTS ckpi;
 drop table if exists ckpi."cKPI101_TA_new";
 
 create table ckpi."cKPI101_TA_new" as
+
 with NL_3681 as
   (
     Select 'TAS3681_101_DOSE_EXP' as Study, "SiteNumber", "Subject","NLSITE","InstanceName",
@@ -1325,15 +1326,15 @@ Select "project" :: text as Study,
 "ORRES_STD" :: text as bestoverallresponse
 From TAS2940_101."OR"
 ) a
-)
+),
 
-,ALLTL_NTL_OR_BOR as(
+ALLTL_NTL_OR_BOR as(
 Select R.Study,
 R.SiteNumber,
 R.Subject,
 R.InstanceName,
 R.InstanceRepeatNumber,
-COALESCE (TL.Dateofimage, NTL.Dateofimage) AS Dateofimage,
+--COALESCE (TL.Dateofimage, NTL.Dateofimage) AS Dateofimage,
 R."Date of Tumor Assessment",
 ORTLRES,
 ORNTLRES,
@@ -1354,7 +1355,6 @@ TL.SiteNumber = R.SiteNumber AND
 TL.Subject = R.Subject AND
 TL.InstanceName = R.InstanceName AND
 TL.InstanceRepeatNumber = R.InstanceRepeatNumber and
-TL.Dateofimage = R."Date of Tumor Assessment" and
 TL.rnk = R.rnk)
 Left JOIN ALLNTL AS NTL
 on     (NTL.Study = R.Study AND
@@ -1362,8 +1362,7 @@ NTL.SiteNumber = R.SiteNumber AND
 NTL.Subject = R.Subject AND
 NTL.InstanceName = R.InstanceName AND
 NTL.InstanceRepeatNumber = R.InstanceRepeatNumber and
-NTL.rnk = R.rnk and
-NTL.Dateofimage = R."Date of Tumor Assessment"
+NTL.rnk = R.rnk
 )
 Left JOIN ALLBOR BR
 on (R.Study = BR.Study AND
@@ -1450,10 +1449,10 @@ From cqs.sv s
 left join cqs.tv t
 on ( s.studyid = t.studyid and s.visit = t.visit)
 where t.visitdy = 0
-),
+)
 
-ALLDATA as (
-Select Study,
+,ALLDATA as (
+select Distinct Study,
 SiteNumber,
 Subject,
 InstanceName,
@@ -1472,7 +1471,7 @@ bestoverallresponse,
 "Lesion Description",
 "Measurement of Target Lesion",
 "Imaging Method",
-DENSE_RANK () over( partition by Study, SiteNumber, Subject order BY order_date, "Date of Tumor Assessment", FolderSeq )-1 :: int as Order_of_Scan
+DENSE_RANK () over( partition by Study, SiteNumber, Subject order BY order_date,"Date of Tumor Assessment", FolderSeq )-1 :: int as Order_of_Scan
 From
 (
 Select Study,
@@ -1480,7 +1479,7 @@ SiteNumber,
 Subject,
 InstanceName,
 InstanceRepeatNumber,
-DateofImage,
+null as DateofImage,
 "Date of Tumor Assessment",
 FolderSeq,
 SumTLMeasure,
@@ -1494,7 +1493,7 @@ tlsite as "Site Of Lesion",
 tlterm as "Lesion Description",
 tldim as "Measurement of Target Lesion",
 tlmeth as "Imaging Method",
-min(DateofImage) OVER (PARTITION BY Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq ) AS order_date
+min("Date of Tumor Assessment") OVER (PARTITION BY Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq ) AS order_date
 From ALLTL_NTL_OR_BOR
      
 Union all
@@ -1505,7 +1504,7 @@ Select Study
 ,InstanceName
 ,InstanceRepeatNumber
 ,DateofImage
-,null--:: as"Date of Tumor Assessment"
+,null as"Date of Tumor Assessment"
 ,FolderSeq
 ,SumTLMeasure
 ,null --::"ORTLRES"
@@ -1529,7 +1528,7 @@ Select Study
 ,InstanceName
 ,InstanceRepeatNumber
 ,DateofImage
-,null--:: as"Date of Tumor Assessment"
+,null as "Date of Tumor Assessment"
 ,FolderSeq
 ,NULL --::SumTLMeasure
 ,null --::"ORTLRES"
@@ -1544,7 +1543,7 @@ Select Study
 ,NULL --::ntlbmeth as "Imaging Method",
 ,min(DateofImage) OVER (PARTITION BY Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq ) AS order_date
 From ALLNTLB
-WHERE Subject NOT IN (Select DISTINCT Subject From ALLTLB)
+WHERE (Study,SiteNumber,Subject) NOT IN (Select DISTINCT Study,SiteNumber,Subject From ALLTLB)
 
 ) b
 )
@@ -1658,14 +1657,6 @@ alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";
 --ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-dev-app-clinical-master-write";
 
 --ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";			
-drop table if exists ckpi."cKPI101_TA_orig";
 
-alter table if exists ckpi."cKPI101_TA" rename to "cKPI101_TA_orig";
-
-alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";			
-
---ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-dev-app-clinical-master-write";	
-
---ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";
 
 
