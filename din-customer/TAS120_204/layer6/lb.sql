@@ -90,7 +90,7 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
                     lb1."StdLow"::NUMERIC                           AS lbstnrlo,
                     lb1."StdHigh"::NUMERIC                          AS lbstnrhi,
                     lb1."LabUnits"::text                            AS lborresu,
-                    lb1."StdValue"::NUMERIC                         AS lbstresn,
+                    coalesce(lb1."StdValue", lb1."NumericValue")::NUMERIC                         AS lbstresn,
                     lb1."StdUnits"::text                            AS lbstresu,
                     NULL::TIME without TIME zone                    AS lbtm,
                     NULL::text                                      AS lbblfl,

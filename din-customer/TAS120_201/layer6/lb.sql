@@ -89,7 +89,7 @@ from (
                         lb1."StdLow"::numeric AS lbstnrlo,
                         lb1."StdHigh"::numeric AS lbstnrhi,
                         lb1."LabUnits"::text AS lborresu,
-                        lb1."StdValue"::numeric AS  lbstresn,
+                        coalesce(lb1."StdValue", lb1."NumericValue")::numeric AS  lbstresn,
                         lb1."StdUnits"::text AS  lbstresu,
                         null::time without time zone AS lbtm, 
                         null::text AS  lbblfl,
