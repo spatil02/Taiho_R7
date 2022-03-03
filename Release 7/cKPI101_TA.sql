@@ -389,7 +389,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
  From
 (
 Select "project" :: text as Study,
@@ -405,8 +405,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From TAS0612_101."TL"
 WHERE   "TLDIM" IS NOT null --or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13,14
@@ -427,7 +427,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -443,8 +443,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From tas120_201."TL"
 WHERE   "TLDIM" IS NOT null --or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13, 14
@@ -465,7 +465,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From
    (
 Select "project" :: text as Study,
@@ -481,8 +481,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From tas120_202."TL"
 WHERE   "TLDIM" IS NOT null --or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13,14
@@ -503,7 +503,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From
 (
 Select 'TAS3681_101_DOSE_ESC' :: text as Study,
@@ -519,8 +519,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From TAS3681_101."TL"
 WHERE   "TLDIM" IS NOT null --or "TLDAT" IS NOT NULL
 and "Subject" in (Select usubjid From cqs.subject where studyid='TAS3681_101_DOSE_ESC')
@@ -541,8 +541,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From TAS3681_101."TL"
 WHERE   "TLDIM" IS NOT null --or "TLDAT" IS NOT NULL
 and "Subject" in (Select usubjid From cqs.subject where studyid='TAS3681_101_DOSE_EXP')
@@ -564,7 +564,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From
    (
 Select "project" :: text as Study,
@@ -580,8 +580,8 @@ regexp_replace("TLTERM", E'[\\n\\r]+', ' ' ):: text as tlterm,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From tas120_203."TL"
 WHERE   "TLDIM" IS NOT null or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13,14
@@ -602,7 +602,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From
    (
 Select "project" :: text as Study,
@@ -618,8 +618,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
    From tas120_204."TL"
 WHERE   "TLDIM" IS NOT null or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13,14
@@ -640,7 +640,7 @@ tlterm,
 tldim,
 tlmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From
    (
 Select "project" :: text as Study,
@@ -656,8 +656,8 @@ max("TLSUM") :: numeric as SumTLMeasure,
 "TLDIM":: numeric as tldim,
 "TLMETH":: text as tlmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TLDAT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TLSUM") ) AS order_date
 From tas2940_101."TL"
 WHERE   "TLDIM" IS NOT null or "TLDAT" IS NOT NULL
 group by 1, 2, 3, 4, 5, 6, 7,9,10,11,12,13,14
@@ -678,7 +678,7 @@ tlbterm,
 tlbdim,
 tlbmeth,
 "RecordPosition",
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
   From(
 Select "project" :: text as Study,
 "SiteNumber" :: text as SiteNumber,
@@ -693,8 +693,8 @@ max("TUTLSUM") :: numeric as SumTLMeasure,
 "MEASURMT":: numeric as tlbdim,
 "TUMETH4":: text as tlbmeth,
 "PageRepeatNumber",
-"RecordPosition",
-min("TUSTDT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TUTLSUM") ) AS order_date
+"RecordPosition"--,
+--min("TUSTDT") OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber", max("TUTLSUM") ) AS order_date
 From tas117_201."TLPB"
 WHERE "MEASURMT" IS NOT null or "TUSTDT" IS NOT NULL
 group by 1,2,3,4,5,6,7,9,10,11,12,"PageRepeatNumber","RecordPosition"
@@ -709,7 +709,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -719,8 +719,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS0612_101."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5,7,8
@@ -735,7 +735,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -745,8 +745,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq ,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS120_201."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5, 7, 8
@@ -761,7 +761,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -771,8 +771,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq ,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS120_202."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5,  7, 8
@@ -787,7 +787,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From  
 (
 Select 'TAS3681_101_DOSE_ESC' :: text as Study,
@@ -797,8 +797,8 @@ Select 'TAS3681_101_DOSE_ESC' :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS3681_101."NTL"
 WHERE "NTLDAT" IS NOT null
 and "Subject" in (Select usubjid From cqs.subject where studyid='TAS3681_101_DOSE_ESC')
@@ -813,8 +813,8 @@ Select 'TAS3681_101_DOSE_EXP' :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS3681_101."NTL"
 WHERE "NTLDAT" IS NOT null
 and "Subject" in (Select usubjid From cqs.subject where studyid='TAS3681_101_DOSE_EXP')
@@ -830,7 +830,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -840,8 +840,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq ,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS120_203."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5,  7, 8
@@ -856,7 +856,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -866,8 +866,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq ,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS120_204."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5,  7, 8
@@ -882,7 +882,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -892,8 +892,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("NTLDAT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq ,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From TAS2940_101."NTL"
 WHERE "NTLDAT" IS NOT NULL  
 group by 1, 2, 3, 4, 5,  7, 8
@@ -908,7 +908,7 @@ InstanceName,
 InstanceRepeatNumber,
 DateofImage,
 FolderSeq,
-DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by order_date ) as rnk
+DENSE_RANK() over ( partition by Study, SiteNumber, Subject, InstanceName, InstanceRepeatNumber, FolderSeq order by DateofImage ) as rnk
 From
 (
 Select "project" :: text as Study,
@@ -918,8 +918,8 @@ Select "project" :: text as Study,
 "InstanceRepeatNumber" :: numeric as InstanceRepeatNumber,
 min("TUSTDT") :: timestamp as DateofImage,
 "FolderSeq" :: numeric as FolderSeq,
-"PageRepeatNumber",
-rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
+"PageRepeatNumber"--,
+--rank() OVER (PARTITION BY "project", "SiteNumber", "Subject", "InstanceName", "InstanceRepeatNumber", "FolderSeq", "PageRepeatNumber") AS order_date
 From   tas117_201."NTLPB"
 WHERE "TUSTDT" IS NOT NULL
 group by 1,2,3,4,5,7,8
@@ -1334,7 +1334,7 @@ R.SiteNumber,
 R.Subject,
 R.InstanceName,
 R.InstanceRepeatNumber,
---COALESCE (TL.Dateofimage, NTL.Dateofimage) AS Dateofimage,
+COALESCE (TL.Dateofimage, NTL.Dateofimage) AS Dateofimage,
 R."Date of Tumor Assessment",
 ORTLRES,
 ORNTLRES,
@@ -1479,7 +1479,7 @@ SiteNumber,
 Subject,
 InstanceName,
 InstanceRepeatNumber,
-null as DateofImage,
+DateofImage,
 "Date of Tumor Assessment",
 FolderSeq,
 SumTLMeasure,
@@ -1657,6 +1657,5 @@ alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";
 --ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-dev-app-clinical-master-write";
 
 --ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";			
-
 
 
