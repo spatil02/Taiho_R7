@@ -1329,11 +1329,11 @@ From TAS2940_101."OR"
 ),
 
 ALLTL_NTL_OR_BOR as(
-Select coalesce(TL.Study,NTL.Study,R.Study) as Study,
-coalesce(TL.SiteNumber,NTL.SiteNumber,R.SiteNumber) as SiteNumber,
-coalesce(TL.Subject,NTL.Subject,R.Subject)as Subject,
-coalesce(TL.InstanceName,NTL.InstanceName,R.InstanceName) as InstanceName ,
-coalesce(TL.InstanceRepeatNumber,NTL.InstanceRepeatNumber,R.InstanceRepeatNumber)as InstanceRepeatNumber,
+Select R.Study,
+R.SiteNumber,
+R.Subject,
+R.InstanceName,
+R.InstanceRepeatNumber,
 COALESCE (TL.Dateofimage, NTL.Dateofimage) AS Dateofimage,
 R."Date of Tumor Assessment",
 ORTLRES,
@@ -1342,21 +1342,21 @@ ORNLYN,
 ORRES,
 "RecordPosition",
 case when bestoverallresponse is null then best.minbr else best1.minbor end as bestoverallresponse,
-coalesce(TL.FolderSeq,NTL.FolderSeq,R.FolderSeq) as FolderSeq,
+R.FolderSeq,
 SumTLMeasure,
 TL.tlsite,
 TL.tlterm,
 TL.tldim,
 TL.tlmeth
 From ALLOR AS R
-full outer JOIN ALLTL AS TL
+Left JOIN ALLTL AS TL
 on     (TL.Study = R.Study AND
 TL.SiteNumber = R.SiteNumber AND
 TL.Subject = R.Subject AND
 TL.InstanceName = R.InstanceName AND
 TL.InstanceRepeatNumber = R.InstanceRepeatNumber and
 TL.rnk = R.rnk)
-full outer JOIN ALLNTL AS NTL
+Left JOIN ALLNTL AS NTL
 on     (NTL.Study = R.Study AND
 NTL.SiteNumber = R.SiteNumber AND
 NTL.Subject = R.Subject AND
@@ -1436,7 +1436,7 @@ on ( R.Study = best1.Study AND
  --and R.rnk = best1.rnk
 )
 
-WHERE "Date of Tumor Assessment" IS NOT NULL and TL.Dateofimage  IS NOT NULL
+WHERE "Date of Tumor Assessment" IS NOT NULL
 ORDER BY TL.Subject, R.FolderSeq, TL.Dateofimage
 ),
  
@@ -1617,7 +1617,6 @@ t.Order_of_Scan > B.Order_of_Scan
 "Measurement of Target Lesion"
 ,nl.CountOfNL
 ,nl.nldate
-,status
 From ALLDATA t
 left join ALLTLB c
 on (t.Study = c.Study AND
@@ -1646,15 +1645,8 @@ on          (t.Study = nl.Study and
              t.InstanceName = nl."InstanceName" and
              t.DateofImage = nl.nldate and
              lower(t.ORNLYN) = 'yes'
-)
-left join	cqs.subject s
-on			(
-			t.Study = s.studyid and
-			t.SiteNumber = s.siteid and
-			t.Subject = s.usubjid
-			)
-			;
-			
+);
+
 
 drop table if exists ckpi."cKPI101_TA_orig";
 
@@ -1664,8 +1656,6 @@ alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";
 
 --ALTER TABLE ckpi."cKPI101_TA" OWNER TO "taiho-dev-app-clinical-master-write";
 
---ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";				
-			
-			
-			
-			
+--ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";			
+
+
