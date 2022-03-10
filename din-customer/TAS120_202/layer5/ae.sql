@@ -6,10 +6,7 @@ Notes: Standard mapping to CCDM AE table
 WITH included_subjects AS (
     SELECT DISTINCT studyid, siteid, usubjid FROM subject),
 
-    ae_data AS ( select * from (
-                 select a.*,
-                 rank() over (partition by a.usubjid, a.aeseq order by a."AEGRDAT" desc) as rank from (
-                 SELECT "project"::text AS studyid,
+    ae_data AS ( SELECT "project"::text AS studyid,
                        "SiteNumber"::text AS siteid,
                        "Subject"::text AS usubjid,
                        nullif("AETERM_PT",'')::text AS aeterm,
@@ -17,46 +14,44 @@ WITH included_subjects AS (
                        coalesce(nullif("AETERM_SOC",''),'Not Available')::text AS aebodsys,
                        "AESTDAT"::timestamp without time zone AS aestdtc,
                        "AEENDAT"::timestamp without time zone AS aeendtc,
-  case when("AEGR")= '0' then 'G0'
-when("AEGR")= '1' then 'G1'
-when("AEGR")= '2' then 'G2'
-when("AEGR")= '3' then 'G3'
-when("AEGR")= '4' then 'G4'
-when("AEGR")= '5' then 'G5'  
-                   when(("AEGR")= '' or ("AEGR") is null) then 'Missing'
-end ::text AS aesev,
-                       case when lower(ae."AESER")='yes' then 'Serious'
-when lower(ae."AESER")='no' then 'Non-Serious'
-else 'Unknown' end::text AS aeser,
-  CASE WHEN ae."AEREL" IN ('possibly related','definitely related','probably related','Related') THEN 'Yes'
-WHEN ae."AEREL" IN('unrelated','Not Reasonably Possible','Not Related') THEN 'No'
-ELSE 'Unknown' END::text as aerelnst,
+						case when("AEGR")= '0' then 'G0'
+						when("AEGR")= '1' then 'G1'
+						when("AEGR")= '2' then 'G2'
+						when("AEGR")= '3' then 'G3'
+						when("AEGR")= '4' then 'G4'
+						when("AEGR")= '5' then 'G5'  
+						when(("AEGR")= '' or ("AEGR") is null) then 'Missing'
+						end ::text AS aesev,
+                        case when lower(ae."AESER")='yes' then 'Serious'
+						when lower(ae."AESER")='no' then 'Non-Serious'
+						else 'Unknown' end::text AS aeser,
+						CASE WHEN ae."AEREL" IN ('possibly related','definitely related','probably related','Related') THEN 'Yes'
+						WHEN ae."AEREL" IN('unrelated','Not Reasonably Possible','Not Related') THEN 'No'
+						ELSE 'Unknown' END::text as aerelnst,
                        --ROW_NUMBER () OVER (PARTITION BY "project", ae."SiteNumber", ae."Subject" ORDER BY ae."AESTDAT")::int AS aeseq,
                        concat("RecordPosition","PageRepeatNumber")::int AS aeseq,
-  "AESTDAT"::timestamp without time zone AS aesttm,
+                       "AESTDAT"::timestamp without time zone AS aesttm,
                        "AEENDAT"::timestamp without time zone AS aeentm,
-  null::text AS aellt,
-  null::int AS aelltcd,
-  null::int AS aeptcd,
-  null::text AS aehlt,
-  null::int AS aehltcd,
-  null::text AS aehlgt,
-  null::int AS aehlgtcd,
-  nullif("AETERM_SOC_CD",'')::int AS aebdsycd,
- nullif("AETERM_SOC",'')::text AS aesoc,
-nullif("AETERM_SOC_CD",'')::int AS aesoccd,
-  coalesce("AEACTSN" ,"AEACTSDR" ,"AEACTSID" ,"AEACTSDQ") ::text  AS aeacn,
- "AEOUT"::Text as aeout,
- "AEGR":: Text as aetoxgr,
- "MinCreated":: date as aerptdt,
- nullif("AETERM_PT",''):: Text as preferredterm,
- null::boolean as aesi,
- "AEGRDAT"
-FROM "tas120_202"."AE" ae)a)b
-where rank = 1
-),
+					  null::text AS aellt,
+					  null::int AS aelltcd,
+					  null::int AS aeptcd,
+					  null::text AS aehlt,
+					  null::int AS aehltcd,
+					  null::text AS aehlgt,
+					  null::int AS aehlgtcd,
+					  nullif("AETERM_SOC_CD",'')::int AS aebdsycd,
+					  nullif("AETERM_SOC",'')::text AS aesoc,
+					  nullif("AETERM_SOC_CD",'')::int AS aesoccd,
+					  coalesce("AEACTSN" ,"AEACTSDR" ,"AEACTSID" ,"AEACTSDQ") ::text  AS aeacn,
+					 "AEOUT"::Text as aeout,
+					 "AEGR":: Text as aetoxgr,
+					 "MinCreated":: date as aerptdt,
+					 nullif("AETERM_PT",''):: Text as preferredterm,
+					 null::boolean as aesi
+					FROM "tas120_202"."AE" ae
+					),
                         
-     site_data as (select distinct studyid,siteid,sitename,sitecountry,sitecountrycode,siteregion from site)
+   site_data as (select distinct studyid,siteid,sitename,sitecountry,sitecountrycode,siteregion from site)
 
 SELECT
         /*KEY (ae.studyid || '~' || ae.siteid || '~' || ae.usubjid)::text AS comprehendid, KEY*/

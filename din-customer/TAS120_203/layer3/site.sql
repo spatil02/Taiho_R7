@@ -35,9 +35,14 @@ WITH included_studies AS (
                         null::text AS sitecity,
                         null::text AS sitestate,
                         null::text AS sitepostal,
-                        null::text AS sitestatus,
+                        Case when "active"='Yes' then sm.closeout_status
+							 else 'Inactive'
+						end::text AS sitestatus,
                         null::date AS sitestatusdate 
-                        from tas120_203.__sites),
+                        from tas120_203.__sites
+                        left join tas120_203_ctms.site_milestones sm on 
+                        split_part("name",'_',1) = sm.site_number
+                        ),
 
     sitecountrycode_data AS (
                 SELECT studyid, countryname_iso, countrycode3_iso FROM studycountry )

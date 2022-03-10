@@ -55,7 +55,6 @@ aeseq,
                       from 
      
  (   
- select *  from (
 SELECT
 "project"::text AS studyid ,
 "SiteNumber"::text AS siteid ,
@@ -87,7 +86,6 @@ nullif("AETERM_SOC_CD",'')::text AS aebdsycd ,
 nullif("AETERM_SOC",'')::text AS aesoc ,
 "AETERM_SOC_CD"::int AS aesoccd ,
 COALESCE("AEACTSN","AEACTSDR","AEACTSID","AEACTSDQ") as aeacn,
-rank() over (partition by "Subject", "PageRepeatNumber" order by "AESTDAT" desc) as rank,
 "AEOUT"::Text as aeout,
 "AEONSGR":: Text as aetoxgr,
 "MinCreated":: date as aerptdt,
@@ -101,12 +99,10 @@ null::boolean as aesi
 ,null::text AS aestdtc_iso
 ,null::text AS aeendtc_iso
 ,null::text AS aeepreli
-from tas120_201."AE") a
-where a.rank = 1
+from tas120_201."AE"
 
 UNION all
 
-select * from (
 Select
 "project"::text AS studyid,
 "SiteNumber"::text AS siteid,
@@ -137,7 +133,6 @@ nullif("AETERM_SOC_CD",'')::text AS aebdsycd,
 "AETERM_SOC"::text AS aesoc,
 case when "AETERM_SOC_CD"='' then NULL ELSE "AETERM_SOC_CD" END::int AS aesoccd,
 COALESCE("AEACTSN","AEACTSDR","AEACTSID","AEACTSDQ") as aeacn,
-rank() over (partition by "Subject", "PageRepeatNumber" order by "AEGRDAT" desc) as rank,
 "AEOUT"::Text as aeout,
 "AEGR":: Text as aetoxgr,
 "MinCreated":: date as aerptdt,
@@ -151,13 +146,13 @@ null::boolean as aesi
 ,null::text AS aestdtc_iso
 ,null::text AS aeendtc_iso
 ,null::text AS aeepreli
-from tas120_201."AE2" ) a
-where a.rank = 1
+from tas120_201."AE2" 
 )a
-)
+),
 
-,included_sites AS (
+included_sites AS (
 SELECT DISTINCT studyid, siteid, sitename, sitecountry,sitecountrycode, siteregion FROM site)
+
 SELECT 
         /*KEY (ae.studyid || '~' || ae.siteid || '~' || ae.usubjid)::text AS comprehendid, KEY*/
         ae.studyid::text AS studyid,
@@ -207,8 +202,4 @@ SELECT
 FROM ae_data ae
 JOIN included_subjects s ON (ae.studyid = s.studyid AND ae.siteid = s.siteid AND ae.usubjid = s.usubjid)
 JOIN included_sites si ON (ae.studyid = si.studyid AND ae.siteid = si.siteid); 
-
-
-
-
 

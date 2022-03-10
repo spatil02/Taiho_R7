@@ -2,7 +2,6 @@
 CCDM Site mapping
 Notes: Standard mapping to CCDM Site table
 */
-
 WITH included_studies AS (
                 SELECT studyid FROM study ),
 
@@ -27,13 +26,18 @@ WITH included_studies AS (
                         null::text AS sitecity,
                         null::text AS sitestate,
                         null::text AS sitepostal,
-                        null::text AS sitestatus,
+                        --sm.site_status::text AS sitestatus,
+						Case when "active"='Yes' then (case when site_status = 'Dropped' then 'Cancelled' else site_status end)
+							 else 'Inactive'
+						end AS sitestatus,
                         null::date AS sitestatusdate
-                        from tas120_204.__sites),
+                        from tas120_204.__sites
+                        left join tas120_204_ctms.sites sm
+						on split_part("name",'_',1) = split_part(sm."site_number",'_',2)
+                        ),
 
     sitecountrycode_data AS (
                 SELECT studyid, countryname_iso, countrycode3_iso FROM studycountry)
-
 SELECT 
         /*KEY (s.studyid || '~' || s.siteid)::text AS comprehendid, KEY*/
         s.studyid::text AS studyid,
@@ -64,4 +68,5 @@ SELECT
 FROM site_data s 
 JOIN included_studies st ON (s.studyid = st.studyid)
 LEFT JOIN sitecountrycode_data cc ON (s.studyid = cc.studyid AND LOWER(s.sitecountry)=LOWER(cc.countryname_iso));
+
 
