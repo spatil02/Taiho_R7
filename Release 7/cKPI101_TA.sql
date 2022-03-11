@@ -1676,3 +1676,4 @@ alter table if exists ckpi."cKPI101_TA_new" rename to "cKPI101_TA";
 
 --ALTER TABLE ckpi."cKPI101_TA_orig" OWNER TO "taiho-dev-app-clinical-master-write";
 
+
