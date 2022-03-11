@@ -188,7 +188,12 @@ group   by       B.studyid, B.siteid, B.usubjid, B.visit,B.visitseq
                                 v.siteid,
                                 v.usubjid,
                                 v.visitnum,
-                                v.visit,
+                                REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE
+                                (REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(v.visit,'<WK[0-9]DA[0-9]/>\sExpansion',''),
+                                '<WK[0-9]DA[0-9][0-9]/>\sExpansion',''),'<W[0-9]DA[0-9]/>\sExpansion',''),
+                                '<W[0-9]DA[0-9][0-9]/>\sExpansion',''),'<WK[0-9]D[0-9]/>\sEscalation',''),
+                                '<WK[0-9]D[0-9][0-9]/>\sEscalation',''),' Escalation ',' '),'\s\([0-9]\)',''),
+                                ' [0-9][0-9]\s[A-Z][a-z][a-z]\s[0-9][0-9][0-9][0-9]',''),'\sExpansion ',' '):: text as visit,
                                 min(v.svstdtc) as svstdtc,
                                 max(v.svendtc) as svendtc
                         from   (SELECT studyid,

@@ -9,7 +9,7 @@ WITH included_sites AS (
     subject_data AS (
                 SELECT  distinct 'TAS2940_101'::text AS studyid,
                         'TAS2940_101'::text AS studyname,
-                        concat(concat('TAS2940_101','_'),substring("site_key",9,11))::text AS siteid,
+                        'TAS2940_101_' || split_part("site_key",'_',2)::text AS siteid,
                         "subject_key"::text AS usubjid,
                         null::text AS screenid,
                         null::text AS randid,

@@ -56,7 +56,7 @@ WITH included_subjects AS (SELECT DISTINCT studyid, siteid, usubjid FROM subject
             (
                 SELECT DISTINCT
                     lb1."project"::text    AS studyid,
-                    concat(concat('TAS120_204','_'),substring(lb1."SiteNumber",8,10))::text AS siteid,
+                    'TAS120_204_' || split_part(lb1."SiteNumber",'_',2)::text AS siteid,
                     lb1."Subject"::text    AS usubjid,
            trim(REGEXP_REPLACE
 						(REGEXP_REPLACE

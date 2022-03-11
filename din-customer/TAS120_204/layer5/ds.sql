@@ -9,7 +9,7 @@ WITH included_subjects AS (
      ds_data AS (
                 ---Disposition Event: All Subjects										
 (SELECT distinct project ::TEXT AS studyid,
-                        concat(concat(dm."project",'_'),substring(dm."SiteNumber",8,10)) ::TEXT AS siteid,
+                        'TAS120_204_' || split_part("SiteNumber",'_',2) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         1.0::NUMERIC AS dsseq, --deprecated
                         'All Subjects'::TEXT AS dscat,
@@ -23,7 +23,7 @@ WITH included_subjects AS (
     --Disposition Event: Consented
 										 
  (SELECT distinct "project" ::TEXT AS studyid,
-                        concat(concat("project",'_'),substring("SiteNumber",8,10)) ::TEXT AS siteid,
+                        'TAS120_204_' || split_part("SiteNumber",'_',2) ::TEXT AS siteid,
                         "Subject" ::TEXT AS usubjid,
                         2.0::NUMERIC AS dsseq, --deprecated
                         'Consent'::TEXT AS dscat,
@@ -38,7 +38,7 @@ WITH included_subjects AS (
 --Disposition Event: Failed Screen										 
  
   (SELECT distinct ie."project" ::TEXT AS studyid,
-                        concat(concat(ie."project",'_'),substring(ie."SiteNumber",8,10)) ::TEXT AS siteid,
+                        'TAS120_204_' || split_part("SiteNumber",'_',2) ::TEXT AS siteid,
                         ie."Subject" ::TEXT AS usubjid,
                         2.1::NUMERIC AS dsseq, --deprecated
                         'Enrollment'::TEXT AS dscat,
@@ -180,7 +180,6 @@ SELECT
         /*KEY , now()::TIMESTAMP WITH TIME ZONE AS comprehend_update_time KEY*/
 FROM ds_data ds
 JOIN included_subjects s ON (ds.studyid = s.studyid AND ds.siteid = s.siteid AND ds.usubjid = s.usubjid);
-
 
 
 

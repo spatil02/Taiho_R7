@@ -455,7 +455,8 @@ ON
         lb.studyid = s.studyid
     AND lb.siteid = s.siteid
     AND lb.usubjid = s.usubjid)
-	JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid)
-;
+	JOIN included_sites si ON (lb.studyid = si.studyid AND lb.siteid = si.siteid);
+	
+	
 	
 	

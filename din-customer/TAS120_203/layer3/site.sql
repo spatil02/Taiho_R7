@@ -9,7 +9,7 @@ WITH included_studies AS (
     site_data AS (
                 SELECT  distinct 'TAS120_203'::text AS studyid,
                         null::text AS studyname,
-                        concat(concat('TAS120_203','_'),substring("name",1,3))::text AS siteid,
+                        'TAS120_203_' || split_part("name",'_',1)::text AS siteid,
                         split_part("name",'_',2)::text AS sitename,
                         'PXL'::text AS croid,
                         'PXL'::text AS sitecro,

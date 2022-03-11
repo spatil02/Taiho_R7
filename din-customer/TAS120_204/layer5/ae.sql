@@ -9,7 +9,7 @@ WITH included_subjects AS (
      ae_data AS (
                 SELECT distinct "project" ::text AS studyid,
                         'TAS120_204'::text AS studyname,
-                        concat(concat("project",'_'),substring("SiteNumber",8,10)) ::text AS siteid,
+                        'TAS120_204_' || split_part("SiteNumber",'_',2) ::text AS siteid,
                         null::text AS sitename,
                         null::text AS sitecountry,
                         null::text AS sitecountrycode,

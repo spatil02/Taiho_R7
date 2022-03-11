@@ -39,3 +39,4 @@ SELECT
         null::text AS sub_ta		
         /*KEY , now()::timestamp with time zone AS comprehend_update_time KEY*/
 FROM study_data s;
+

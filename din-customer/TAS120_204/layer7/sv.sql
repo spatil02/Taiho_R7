@@ -19,7 +19,7 @@ sv.svstdtc,
 sv.svendtc from(
                 SELECT  "project"::text AS studyid,
                         'TAS120_204'::text AS studyname,
-                        concat(concat('TAS120_204','_'),substring("SiteNumber",8,10))::text AS siteid,
+                        'TAS120_204_' || split_part("SiteNumber",'_',2)::text AS siteid,
                         "Subject"::text AS usubjid, 
                         "FolderSeq"::numeric AS visitnum,
                         trim(REGEXP_REPLACE

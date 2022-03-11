@@ -9,7 +9,7 @@ WITH included_subjects AS (
      ie_data AS(
 		
                 SELECT distinct "project"::text AS studyid,
-                        concat(concat('TAS2940_101','_'),substring("SiteNumber",9,11))::text AS siteid,
+                        'TAS2940_101_' || split_part("SiteNumber",'_',2)::text AS siteid,
                         "Subject"::text AS usubjid,
                          row_number() OVER (PARTITION BY ie.studyid, ie.siteid, ie."Subject" ORDER BY ie."serial_id")::int as ieseq,
                         "FolderSeq"::numeric AS visitnum,

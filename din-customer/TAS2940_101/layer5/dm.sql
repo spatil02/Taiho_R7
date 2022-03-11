@@ -9,7 +9,7 @@ WITH included_subjects AS (
      dm_data AS (
                 SELECT  distinct dm.project ::text AS studyid,
                         'TAS2940_101'::text AS studyname,
-                        concat(concat(dm."project",'_'),substring(dm."SiteNumber",9,11))::text AS siteid,
+                        'TAS2940_101_' || split_part(dm."SiteNumber",'_',2)::text AS siteid,
                         null::text AS sitename,
                         null::text AS sitecountry,
                         dm."Subject" ::text AS usubjid,
